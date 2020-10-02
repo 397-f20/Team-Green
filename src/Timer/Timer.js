@@ -90,17 +90,17 @@ const Timer = () => {
 
       {isStopped &&
       <TouchableOpacity style={styles.buttonBase} onPress={() => { startTimer() }}>
-        <Text>Start</Text>
+        <Text style={styles.font}>Start</Text>
       </TouchableOpacity>}
       
       {!isStopped && !completedTask && 
       <TouchableOpacity style={styles.buttonBase} onPress={() => setIsPaused(!isPaused)}>
-        <Text>{isPaused ? "Resume" : "Pause"}</Text>
+        <Text style={styles.font}>{isPaused ? "Resume" : "Pause"}</Text>
       </TouchableOpacity>}
 
       {!isStopped && 
       <TouchableOpacity style={styles.buttonBase} onPress={() => stopTimer()}>
-        <Text>Restart</Text>
+        <Text style={styles.font}>Restart</Text>
       </TouchableOpacity>}
 
       {completedTask && <Text>Task complete! You've got a new fish!</Text>}
@@ -131,7 +131,12 @@ const styles = StyleSheet.create({
     minWidth: 90,
     maxWidth: 90,
     backgroundColor: '#004a99'
-}
+ },
+  font : {
+    color: '#f0f2f5',
+    fontSize: 15,
+    fontWeight:'bold',
+  }
 });
 
 export default Timer;
