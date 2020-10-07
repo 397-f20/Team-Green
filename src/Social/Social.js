@@ -125,9 +125,10 @@ const RenderFish = () => {
   const random1 = Math.random();
   const random2 = Math.random();
   const fishSize = Math.random() * 40 + 20;
+  const chooseFishRandom = Math.floor(Math.random() * 6);
 
   return (
-    <Fish random1={random1} random2={random2} fishSize={fishSize} />
+    <Fish random1={random1} random2={random2} fishSize={fishSize} chooseFishRandom={chooseFishRandom} />
   );
 }
 
