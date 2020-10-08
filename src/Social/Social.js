@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import Fish from './Fish.js';
 import UserContext from "../UserContext"
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
-import {firebase} from '../../config/firebase'
+import { firebase } from '../../config/firebase'
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -13,7 +13,7 @@ const Social = () => {
   // const user = useContext(UserContext); 
 
   const [user, setUser] = useState({});
-  const [usr, setUsr] = useState({"friends":[]});
+  const [usr, setUsr] = useState({ "friends": [] });
 
   const [selectedValue, setSelectedValue] = useState("");
   const [fishArray, setFishArray] = useState([]);
@@ -29,7 +29,7 @@ const Social = () => {
 
   // Currently user being the users list from JSON and usr being the individual user
   // const usr = user.a;
-  useEffect(()=>{
+  useEffect(() => {
     if ("a" in user) {
       setUsr(user.a);
       setSelectedValue(user.a.name);
@@ -45,20 +45,26 @@ const Social = () => {
 
   function getFriendsList(friends) {
     let friendArr = [];
-    friendArr.push({label: usr.name, value: usr.id});
+    friendArr.push({ label: usr.name, value: usr.id });
     // friendArr.push({label: user.name, value: user.name});
 
     let friendIDs = Object.keys(friends);
     let friendNames = Object.values(friends);
 
-    for(let i = 0; i < friendNames.length; i++){
-      friendArr.push({label: friendNames[i], value: friendIDs[i]});
+    for (let i = 0; i < friendNames.length; i++) {
+      let currItem = {
+        label: friendNames[i],
+        value: friendIDs[i]
+      };
+      friendArr.push(currItem);
+    }
+
+    if (typeof (friendArr[0].label) === "undefined") {
+      friendArr = [];
+      friendArr.push({ label: "loading", value: "loading" })
     }
     return friendArr;
   }
-
-
-
   const pickerStyle = {
     inputIOS: {
       paddingTop: 13,
@@ -81,11 +87,11 @@ const Social = () => {
     inputWeb: {
       color: 'black',
       backgroundColor: 'white',
-      marginTop: '-5%', 
+      marginTop: '-5%',
       margin: 'auto',
       width: '50%',
       borderRadius: 25,
-    }, 
+    },
     underline: { borderTopWidth: 5 },
     icon: {
       backgroundColor: 'grey',
@@ -105,7 +111,7 @@ const Social = () => {
   return (
     <View style={styles.container}>
       <View style={styles.pickerContainer}>
-        <RNPickerSelect 
+        <RNPickerSelect
           style={pickerStyle}
           onValueChange={(itemValue) => changeFishTank(itemValue)}
           items={getFriendsList(usr.friends)}
