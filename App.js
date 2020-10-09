@@ -24,6 +24,7 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="Social"
+        tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             let iconName;
@@ -31,14 +32,14 @@ export default function App() {
             if (route.name === 'Social') {
               iconName = focused
                 ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
-                : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="black" />;
+                : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
             } else if (route.name === 'Timer') {
               iconName = focused 
                 ? <AntDesign name="clockcircle" size={24} color="black" /> 
-                : <AntDesign name="clockcircleo" size={24} color="black" />;
+                : <AntDesign name="clockcircleo" size={24} color="#2a2a72" />;
             } else if (route.name === 'Profile') {
               iconName = focused
-                ? <FontAwesome name="user" size={24} color="black" />
+                ? <FontAwesome name="user" size={24} color="white" />
                 : <AntDesign name="user" size={24} color="black" />
             }
 

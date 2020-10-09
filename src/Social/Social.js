@@ -4,7 +4,7 @@ import Fish from './Fish.js';
 import UserContext from "../UserContext"
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { firebase } from '../../config/firebase'
-
+import Background from '../FishTank/Background.js';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -110,7 +110,7 @@ const Social = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.pickerContainer}>
+      {/* <View style={styles.pickerContainer}>
         <RNPickerSelect
           style={pickerStyle}
           onValueChange={(itemValue) => changeFishTank(itemValue)}
@@ -121,7 +121,8 @@ const Social = () => {
       </View>
       {fishArray.map((fish, index) => (
         <RenderFish key={index} />
-      ))}
+      ))} */}
+      <Background />
 
     </View>
   );
@@ -153,9 +154,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'lightblue',
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 });
 
