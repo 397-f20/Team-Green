@@ -7,7 +7,8 @@
     "web": "expo start --web",
     "build": "expo build:web",
     "deploy": "yarn run build && firebase deploy",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "yarn test"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
