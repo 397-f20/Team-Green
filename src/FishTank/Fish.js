@@ -1,16 +1,17 @@
 import React, { useState, useEffect} from 'react';
-import { Image, Animated, StyleSheet, Easing, SegmentedControlIOSComponent } from 'react-native';
+import { Image, Animated, StyleSheet } from 'react-native';
 import { fishArray, fishArrayLength } from './FishArray.js';
 
 const Fish = (props) => {
 
   const [fishAnimated, setFishAnimated] = useState(new Animated.Value(0));
   const animationDuration = 25000;
-  const [name, setName] = useState()
-  const [ratio, setRatio] = useState()
-  const [initialTop, setInitialTop] = useState()
-  const [initialLeft, setInitialLeft] = useState()
-  const [size, setSize] = useState()
+  const chosenIndex = Math.floor(Math.random() * fishArrayLength());
+  const [name, setName] = useState(fishArray[chosenIndex].name)
+  const [ratio, setRatio] = useState(fishArray[chosenIndex].ratio)
+  const [initialTop, setInitialTop] = useState(Math.floor(Math.random() * (props.SCREEN_HEIGHT - 100)) + 50)
+  const [initialLeft, setInitialLeft] = useState(Math.floor(Math.random() * (props.SCREEN_WIDTH -100)) + 50)
+  const [size, setSize] = useState(Math.floor(Math.random() * 25) + 25)
 
   const runFishAnimation = () => {
     Animated.loop(
@@ -43,7 +44,6 @@ const Fish = (props) => {
     }
 
   }
-  const [translationX, setTranslateX] = useState([0, 0, 0, 0, 0]);
 
    // TO DO
    const getTranslateY = () => {
@@ -55,20 +55,10 @@ const Fish = (props) => {
     } else {
       return [0, -5, -15, -35, -75, -135, -195, -235, -255, -265, -270, -265, -255, -235, -195, -135, -75, -35, -15, -5, 0]
     }
-    return [0, 0]
   }
 
   useEffect(() => {
-    const chosenIndex = Math.floor(Math.random() * fishArrayLength()),
-    const size = Math.floor(Math.random() * 25) + 25,
-    const top = Math.floor(Math.random() * (SCREEN_HEIGHT - 100)) + 50,
-    const left = Math.floor(Math.random() - (SCREEN_WIDTH-100)) + 50
-    
-    setName(fishArray[chosenIndex].name)
-    setRatio(fishArray[chosenIndex].ratio)
-    setSize(size)
-    setInitialTop(top)
-    setInitialLeft(left)
+
     runFishAnimation();
   }, [])
 

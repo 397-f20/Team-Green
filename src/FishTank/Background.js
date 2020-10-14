@@ -30,9 +30,9 @@ const Background = (props) => {
         end={[.2, .9]}
       />
 
-      <BubbleWrapper />
+    <FishWrapper SCREEN_WIDTH={SCREEN_WIDTH} SCREEN_HEIGHT={SCREEN_HEIGHT} numFish={props.numFish} />
 
-      <FishWrapper SCREEN_WIDTH={SCREEN_WIDTH} SCREEN_HEIGHT={SCREEN_HEIGHT} numFish={props.numFish} />
+    <BubbleWrapper />
       
     </View>
   );  

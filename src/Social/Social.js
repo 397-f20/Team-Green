@@ -105,20 +105,7 @@ const Social = () => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.pickerContainer}>
-        <RNPickerSelect
-          style={pickerStyle}
-          onValueChange={(itemValue) => changeFishTank(itemValue)}
-          items={getFriendsList(usr.friends)}
-          // items={getFriendsList(user.friends)}
-          placeholder={{}}
-        />
-      </View>
-      {fishArray.map((fish, index) => (
-        <RenderFish key={index} />
-      ))} */}
-      <Background numFish={2} />
-
+      <Background numFish={12} />
     </View>
   );
 }
