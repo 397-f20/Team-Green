@@ -9,12 +9,13 @@ const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
 // components
 import BubbleWrapper from './BubbleWrapper.js';
+import FishWrapper from './FishWrapper.js';
 
 const Background = (props) => {
 
-
   return (
     <View style={[styles.container, {width: SCREEN_WIDTH, height: SCREEN_HEIGHT}]}>
+      
       <LinearGradient
         // Background Linear Gradient
         colors={['#eaeaea', '#00a4e4']}
@@ -30,6 +31,8 @@ const Background = (props) => {
       />
 
       <BubbleWrapper />
+
+      <FishWrapper SCREEN_WIDTH={SCREEN_WIDTH} SCREEN_HEIGHT={SCREEN_HEIGHT} numFish={props.numFish} />
       
     </View>
   );  

@@ -1,8 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import Fish from './Fish.js';
-import UserContext from "../UserContext"
-import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { firebase } from '../../config/firebase'
 import Background from '../FishTank/Background.js';
 
@@ -10,7 +7,6 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 
 const Social = () => {
-  // const user = useContext(UserContext); 
 
   const [user, setUser] = useState({});
   const [usr, setUsr] = useState({ "friends": [] });
@@ -46,7 +42,6 @@ const Social = () => {
   function getFriendsList(friends) {
     let friendArr = [];
     friendArr.push({ label: usr.name, value: usr.id });
-    // friendArr.push({label: user.name, value: user.name});
 
     let friendIDs = Object.keys(friends);
     let friendNames = Object.values(friends);
@@ -122,7 +117,7 @@ const Social = () => {
       {fishArray.map((fish, index) => (
         <RenderFish key={index} />
       ))} */}
-      <Background />
+      <Background numFish={2} />
 
     </View>
   );
