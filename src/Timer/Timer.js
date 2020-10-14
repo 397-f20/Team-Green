@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import UserContext from "../UserContext"
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {firebase} from '../../config/firebase'
+import Background from '../FishTank/Background.js';
 
 const Timer = () => {
   // const user = useContext(UserContext);
@@ -74,6 +75,9 @@ const Timer = () => {
 
   return (
     <View style={styles.timer}>
+
+      <Background numFish={10} />
+
        <CountdownCircleTimer
         key={isStopped || time=== 0}
         isPlaying={!isPaused}
