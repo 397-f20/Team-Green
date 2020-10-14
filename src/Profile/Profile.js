@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {firebase} from '../../config/firebase'
 import { Dimensions } from "react-native";
-import { BarChart } from "react-native-chart-kit";
+import { BarChart, LineChart } from "react-native-chart-kit";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -23,7 +23,8 @@ const chartConfig = {
   strokeWidth: 2, // optional, default 3
   barPercentage: 0.5,
   fillShadowGradient: 'blue',
-  fillShadowGradientOpacity: 1
+  fillShadowGradientOpacity: 1,
+  decimalPlaces: 0, // optional, defaults to 2dp
 };
 
 const Profile = () => {
@@ -31,7 +32,7 @@ const Profile = () => {
   const [usr, setUsr] = useState({"friends":[]});
 
   const [history, setHistory] = useState({});
-  const [segments, setSegments] = useState(0);
+  const [segments, setSegments] = useState(5);
 
   useEffect(() => {
     const db = firebase.database().ref('users');
