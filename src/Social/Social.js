@@ -45,7 +45,7 @@ const Social = () => {
 
   function getFriendsList(friends) {
     let friendArr = [];
-    friendArr.push({ label: usr.name+" (You)", value: usr.id});
+    friendArr.push({ label: usr.name? usr.name + " (You)" : usr.name, value: usr.id}); //if usr.name is undefined, dont add "(You)" to 
     // friendArr.push({label: user.name, value: user.name});
 
     let friendIDs = Object.keys(friends);
