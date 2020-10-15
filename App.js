@@ -49,7 +49,7 @@ export default function App() {
       >
         <Tab.Screen name="Social" component={Social} />
         <Tab.Screen name="Timer" component={Timer} />
-        {/* <Tab.Screen name="Profile" component={Profile} /> */}
+        <Tab.Screen name="Profile" component={Profile} /> 
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import UserContext from "../UserContext"
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {firebase} from '../../config/firebase'
 
 const Timer = () => {
-  // const user = useContext(UserContext);
-
   const [user, setUser] = useState({});
-
   const [usr, setUsr] = useState({});
 
   useEffect(() => {
@@ -27,18 +23,20 @@ const Timer = () => {
     }
   }, [user])
 
+
   const [time, setTime] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
   const [completedTask, setCompletedTask] = useState(false);
   const [isStopped, setIsStopped] = useState(true);
 
-  const timerDuration = 60 * 0.5; 
+  const timerDuration = 10; 
 
   useEffect(() => {  
     if (time===0 && !isPaused){
       setIsPaused(true);
       setCompletedTask(true);
       incrementFish(usr.id);
+      updateHistory(usr.id);
     }
     else if (!isPaused) {
       setTimeout(() => {
@@ -50,6 +48,16 @@ const Timer = () => {
 
   function incrementFish(userId) {
     firebase.database().ref('users').child(userId).child('fish').set(usr.fish +1);
+  }
+
+  function updateHistory(userId) {
+    const today = new Date().toDateString();
+    if (usr.history[today]) {
+      firebase.database().ref('users').child(userId).child('history').child(today).set( usr.history[today] + 1);
+    }
+    else{
+      firebase.database().ref('users').child(userId).child('history').child(today).set(1);
+    }
   }
 
   function startTimer() {
@@ -67,9 +75,14 @@ const Timer = () => {
   }
 
   const displayTime = (time) => {
-    const tempMinutes = Math.floor(time / 60).toLocaleString('en-US', { minimumIntegerDigits: 2 });
-    const tempSeconds = (time % 60).toLocaleString('en-US', { minimumIntegerDigits: 2 });
-    return `${tempMinutes}:${tempSeconds}`;
+    let tempMinutes = Math.floor(time / 60).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+    let tempSeconds = (time % 60).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+    if (tempMinutes.length <=1){
+      tempMinutes= "0" + tempMinutes}
+    if (tempSeconds.length <=1){
+      tempSeconds= "0" + tempSeconds
+    }
+    return tempMinutes + ":" + tempSeconds;
   }
 
   return (
