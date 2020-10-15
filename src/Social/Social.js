@@ -45,7 +45,7 @@ const Social = () => {
 
   function getFriendsList(friends) {
     let friendArr = [];
-    friendArr.push({ label: usr.name, value: usr.id });
+    friendArr.push({ label: usr.name+" (You)", value: usr.id});
     // friendArr.push({label: user.name, value: user.name});
 
     let friendIDs = Object.keys(friends);
@@ -115,7 +115,6 @@ const Social = () => {
           style={pickerStyle}
           onValueChange={(itemValue) => changeFishTank(itemValue)}
           items={getFriendsList(usr.friends)}
-          // items={getFriendsList(user.friends)}
           placeholder={{}}
         />
       </View>

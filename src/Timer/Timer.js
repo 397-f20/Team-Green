@@ -75,9 +75,14 @@ const Timer = () => {
   }
 
   const displayTime = (time) => {
-    const tempMinutes = Math.floor(time / 60).toLocaleString('en-US', { minimumIntegerDigits: 2 });
-    const tempSeconds = (time % 60).toLocaleString('en-US', { minimumIntegerDigits: 2 });
-    return `${tempMinutes}:${tempSeconds}`;
+    let tempMinutes = Math.floor(time / 60).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+    let tempSeconds = (time % 60).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+    if (tempMinutes.length <=1){
+      tempMinutes= "0" + tempMinutes}
+    if (tempSeconds.length <=1){
+      tempSeconds= "0" + tempSeconds
+    }
+    return tempMinutes + ":" + tempSeconds;
   }
 
   return (
