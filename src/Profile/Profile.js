@@ -52,7 +52,7 @@ const Profile = () => {
     let dataPoints = Object.values(history);
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
-  usr.img = require('./../../assets/profiles/shaggy.jpg') ////////////////////////eventually get images from server
+  usr.img = require('../../assets/profiles/shaggy.jpg') ////////////////////////eventually get images from server
   return (
     <View style={styles.container}>
       <ProfileHeader title={usr.name} img={usr.img} />
