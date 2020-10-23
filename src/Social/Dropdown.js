@@ -11,7 +11,7 @@ const Dropdown = (props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View >
       <TouchableOpacity activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
         <View style={styles.currentSelection}>
           <Text style={styles.currentSelectionText}>{props.loggedIn}</Text>
