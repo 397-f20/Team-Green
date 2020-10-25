@@ -33,6 +33,7 @@ const Timer = () => {
   const timerDuration = 10; 
 
   useEffect(() => {  
+    let timeout; // cleanup variable to clear setTimeout();
     if (time===0 && !isPaused){
       setIsPaused(true);
       setCompletedTask(true);
@@ -40,11 +41,13 @@ const Timer = () => {
       updateHistory(usr.id);
     }
     else if (!isPaused) {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         const tempTime = time - 1;
-        setTime(tempTime);
+        setTime(time - 1);
       }, 1000)
     }
+
+    return () => clearTimeout(timeout); // cleanup function
   }, [time, isPaused]);
 
   function incrementFish(userId) {
