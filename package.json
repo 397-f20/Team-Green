@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
+    "@testing-library/react-native": "^7.1.0",
     "expo-cli": "^3.28.0"
   },
   "private": true

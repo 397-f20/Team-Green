@@ -16,7 +16,7 @@ const FishWrapper = (props) => {
   return (
     <View>
       {renderedFish.map((fish, index) => (
-        <Fish SCREEN_WIDTH={props.SCREEN_WIDTH} SCREEN_HEIGHT={props.SCREEN_HEIGHT} key={index} />
+        <Fish SCREEN_WIDTH={props.SCREEN_WIDTH} SCREEN_HEIGHT={props.SCREEN_HEIGHT} key={index} random={Math.random()} sizeRandom={Math.random()} />
       ))}
     </View>
   )
