@@ -5,6 +5,8 @@ import Background from '../FishTank/Background.js';
 import Dropdown from './Dropdown.js';
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
+const c = 'numFish';
+
 
 const Social = () => {
 
@@ -30,7 +32,7 @@ const Social = () => {
 
   return (
     <View style={styles.container}>
-      <Background numFish={numFishRendered} />
+      <Background numFish={numFishRendered}/>
       <Dropdown userData={usersData} loggedIn={loggedInUser.name} changeUser={changeUser} />
     </View>
   );
