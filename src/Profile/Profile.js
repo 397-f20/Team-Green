@@ -46,9 +46,14 @@ const Profile = () => {
     }
   }, [user])
 
+  function getDate (ms) {
+    const date = new Date();
+    date.setTime(ms);
+    return date.toDateString().slice(3, 10);
+  }
 
   function constructData(history) {
-    let labels = Object.keys(history).map(e => e.slice(0, 10));
+    let labels = Object.keys(history).map(e => getDate(e));
     let dataPoints = Object.values(history);
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
@@ -62,7 +67,7 @@ const Profile = () => {
         </Text>
         <View>
         <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
-        <BarChart
+        <LineChart
           style={styles.graphStyle}
           data={constructData(history)}
           width={screenWidth * 0.9}
@@ -70,6 +75,8 @@ const Profile = () => {
           chartConfig={chartConfig}
           fromZero={true}
           segments={segments < 10 ? segments : 5}
+          verticalLabelRotation={30}
+          withVerticalLabels={true}
         />
         </View>
       </ScrollView>
