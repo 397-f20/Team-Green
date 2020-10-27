@@ -7,16 +7,17 @@ import Fish from './Fish.js';
 
 const FishWrapper = (props) => {
 
-  const [renderedFish, setRenderedFish] = useState(new Array(props.numFish).fill('', 0, props.numFish))
+  const [renderedFish, setRenderedFish] = useState(props.fishObjects)
 
   useEffect(() => {
     setRenderedFish([])
-    setRenderedFish(new Array(props.numFish).fill('', 0, props.numFish))
-  }, [props.numFish])
+    setRenderedFish(props.fishObjects);
+    console.log(props.fishObjects);
+  }, [props.fishObjects])
   return (
     <View>
-      {renderedFish.map((fish, index) => (
-        <Fish SCREEN_WIDTH={props.SCREEN_WIDTH} SCREEN_HEIGHT={props.SCREEN_HEIGHT} key={index} random={Math.random()} sizeRandom={Math.random()} />
+      {Object.values(renderedFish).map((fish, index) => (
+        <Fish SCREEN_WIDTH={props.SCREEN_WIDTH} SCREEN_HEIGHT={props.SCREEN_HEIGHT} key={index} random={Math.random()} sizeRandom={fish.size} fishType={fish.idx} />
       ))}
     </View>
   )

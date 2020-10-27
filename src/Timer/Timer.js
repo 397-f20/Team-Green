@@ -3,16 +3,26 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {firebase} from '../../config/firebase'
 import Background from '../FishTank/Background.js';
+import { fishArrayLength } from '../FishTank/FishArray';
 
 const Timer = () => {
   const [user, setUser] = useState({});
   const [usr, setUsr] = useState({});
+
+  const [time, setTime] = useState(0);
+  const [isPaused, setIsPaused] = useState(true);
+  const [completedTask, setCompletedTask] = useState(false);
+  const [isStopped, setIsStopped] = useState(true);
+  const [fishRendered, setFishRendered] = useState([]);
+
+  const timerDuration = 10; 
 
   useEffect(() => {
     const db = firebase.database().ref('users');
     db.on('value', snap => {
       if (snap.val()) {
         setUser(snap.val());
+        setFishRendered(snap.val().a.fishObjects);
       }
     }, error => console.log(error));
   }, []);
@@ -24,18 +34,11 @@ const Timer = () => {
     }
   }, [user])
 
-
-  const [time, setTime] = useState(0);
-  const [isPaused, setIsPaused] = useState(true);
-  const [completedTask, setCompletedTask] = useState(false);
-  const [isStopped, setIsStopped] = useState(true);
-
-  const timerDuration = 10; 
-
   useEffect(() => {  
     if (time===0 && !isPaused){
       setIsPaused(true);
       setCompletedTask(true);
+      addFishObject(usr.id);
       incrementFish(usr.id);
       updateHistory(usr.id);
     }
@@ -46,6 +49,12 @@ const Timer = () => {
       }, 1000)
     }
   }, [time, isPaused]);
+
+  function addFishObject(userId){
+    let idx = Math.floor(Math.random() * fishArrayLength());
+    let size = Math.floor(Math.random() * 40) + 25;
+    firebase.database().ref('users').child(userId).child('fishObjects').push({idx: idx, size: size});
+  }
 
   function incrementFish(userId) {
     firebase.database().ref('users').child(userId).child('fish').set(usr.fish +1);
@@ -89,7 +98,7 @@ const Timer = () => {
   return (
     <View style={styles.timer}>
 
-      <Background numFish={10} />
+      <Background fishObjects={fishRendered} />
 
        <CountdownCircleTimer
         key={isStopped || time=== 0}

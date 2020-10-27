@@ -10,7 +10,8 @@ const Social = () => {
 
   const [usersData, setUsersData] = useState({});
   const [loggedInUser, setLoggedInUser] = useState({name: '', fish: 0});
-  const [numFishRendered, setNumFishRendered] = useState(0)
+  const [fishRendered, setFishRendered] = useState([]);
+  
 
   useEffect(() => {
     const db = firebase.database().ref('users');
@@ -18,19 +19,19 @@ const Social = () => {
       if (snap.val()) {
         setUsersData(snap.val());
         setLoggedInUser(snap.val().a)
-        setNumFishRendered(snap.val().a.fish)
+        setFishRendered(snap.val().a.fishObjects)
       }
     }, error => console.log(error));
   }, []);
 
   const changeUser = (user) => {
     setLoggedInUser(usersData[user]);
-    setNumFishRendered(usersData[user].fish);
+    setFishRendered(usersData[user].fishObjects);
   }
 
   return (
     <View style={styles.container}>
-      <Background numFish={numFishRendered} />
+      <Background fishObjects={fishRendered} />
       <Dropdown userData={usersData} loggedIn={loggedInUser.name} changeUser={changeUser} />
     </View>
   );

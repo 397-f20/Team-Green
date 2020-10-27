@@ -60,8 +60,9 @@ const Profile = () => {
         <Text style={{paddingVertical: 10}}>
           Congratulations! You have studied {Object.values(history).length} days in total!
         </Text>
-        <View>
         <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
+
+        <View>
         <BarChart
           style={styles.graphStyle}
           data={constructData(history)}

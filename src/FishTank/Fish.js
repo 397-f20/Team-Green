@@ -6,12 +6,12 @@ const Fish = (props) => {
 
   const [fishAnimated, setFishAnimated] = useState(new Animated.Value(0));
   const animationDuration = 250000 * props.random + 75000;
-  const chosenIndex = Math.floor(Math.random() * fishArrayLength());
+  const chosenIndex = props.fishType; 
   const [name, setName] = useState(fishArray[chosenIndex].name)
   const [ratio, setRatio] = useState(fishArray[chosenIndex].ratio)
   const [initialTop, setInitialTop] = useState(Math.floor(Math.random() * (props.SCREEN_HEIGHT - 100)) + 50)
   const [initialLeft, setInitialLeft] = useState(Math.floor(Math.random() * (props.SCREEN_WIDTH -100)) + 50)
-  const [size, setSize] = useState(Math.floor(props.sizeRandom * 40) + 25)
+  const [size, setSize] = useState(props.sizeRandom);
 
   const runFishAnimation = () => {
     Animated.loop(
