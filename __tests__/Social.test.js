@@ -16,7 +16,8 @@ describe("Social Page Testing", () => {
             }
         };
         async() => {
-            render(<Background fishObjects={fishObj} />)
+            const background = render(<Background fishObjects={fishObj} />);
+            expect(background).toBeDefined();
         };
     });
 
