@@ -26,6 +26,7 @@ const Social = () => {
 
   const changeUser = (user) => {
     setLoggedInUser(usersData[user]);
+    // console.log(userData[user]);
     setFishRendered(usersData[user].fishObjects);
   }
 
