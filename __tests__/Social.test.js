@@ -21,8 +21,8 @@ describe("Social Page Testing", () => {
         expect(background).toBeDefined();
     })
 
-    it('selecting user updates number of fish', () => {
-        // In Progress
-        render(<Social />);
-    })
+    // In Progress
+    // it('selecting user updates number of fish', () => {
+    //     render(<Social />);
+    // })
 });
