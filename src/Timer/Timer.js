@@ -55,12 +55,13 @@ const Timer = () => {
   }
 
   function updateHistory(userId) {
-    const today = new Date().toDateString();
+    const today = new Date(Date.now());
+    const key = today.valueOf();
     if (usr.history[today]) {
-      firebase.database().ref('users').child(userId).child('history').child(today).set( usr.history[today] + 1);
+      firebase.database().ref('users').child(userId).child('history').child(key).set( usr.history[key] + 1);
     }
     else{
-      firebase.database().ref('users').child(userId).child('history').child(today).set(1);
+      firebase.database().ref('users').child(userId).child('history').child(key).set(1);
     }
   }
 
