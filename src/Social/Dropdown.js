@@ -7,11 +7,11 @@ const Dropdown = (props) => {
 
   const changeUser = (user) => {
     setShowDropdown(false);
-    props.changeUser(user)
+    props.changeUser(user);
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} userData={props.userData}>
       <TouchableOpacity activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
         <View style={styles.currentSelection}>
           <Text style={styles.currentSelectionText}>{props.loggedIn}</Text>
