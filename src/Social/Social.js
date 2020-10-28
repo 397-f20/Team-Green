@@ -6,7 +6,9 @@ import Dropdown from './Dropdown.js';
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 
-const Social = () => {
+const Social = ({route}) => {
+
+  
 
   const [usersData, setUsersData] = useState({});
   const [loggedInUser, setLoggedInUser] = useState({name: '', fish: 0});
@@ -17,9 +19,10 @@ const Social = () => {
     const db = firebase.database().ref('users');
     db.on('value', snap => {
       if (snap.val()) {
-        setUsersData(snap.val());
-        setLoggedInUser(snap.val().a)
-        setFishRendered(snap.val().a.fishObjects)
+        const data = snap.val()
+        setUsersData(data);
+        setLoggedInUser(data[route.params.username])
+        setFishRendered(data[route.params.username].fishObjects)
       }
     }, error => console.log(error));
   }, []);
