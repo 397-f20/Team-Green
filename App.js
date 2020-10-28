@@ -39,8 +39,8 @@ export default function App() {
                 : <AntDesign name="clockcircleo" size={24} color="#2a2a72" />;
             } else if (route.name === 'Profile') {
               iconName = focused
-                ? <FontAwesome name="user" size={24} color="white" />
-                : <AntDesign name="user" size={24} color="black" />
+                ? <FontAwesome name="user" size={24} color="black" />
+                : <AntDesign name="user" size={24} color="#2a2a72" />
             }
 
             // You can return any component that you like here!

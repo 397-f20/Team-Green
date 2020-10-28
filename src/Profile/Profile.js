@@ -46,10 +46,15 @@ const Profile = () => {
     }
   }, [user])
 
+
+  // Format date
   function getDate (ms) {
     const date = new Date();
     date.setTime(ms);
-    return date.toDateString().slice(3, 10);
+    
+    const month = date.getMonth() + 1;
+    const day = date.getDate();    
+    return `${month}-${day}`;
   }
 
   function constructData(history) {
@@ -75,8 +80,8 @@ const Profile = () => {
           chartConfig={chartConfig}
           fromZero={true}
           segments={segments < 10 ? segments : 5}
-          verticalLabelRotation={30}
-          withVerticalLabels={true}
+          //verticalLabelRotation={30}
+          //withVerticalLabels={true}
         />
         </View>
       </ScrollView>
