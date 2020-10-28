@@ -10,7 +10,7 @@ import Dropdown from '../src/Social/Dropdown';
 
 
 describe("Social Page Testing", () => {
-    it('should render Background', () => {
+    it('should render Background', async() => {
         const fishObj = {
             'fishObj': {
                 idx: 0,
