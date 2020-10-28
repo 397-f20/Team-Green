@@ -14,6 +14,7 @@ const FishWrapper = (props) => {
     setRenderedFish(props.fishObjects);
     console.log(props.fishObjects);
   }, [props.fishObjects])
+
   return (
     <View>
       {Object.values(renderedFish).map((fish, index) => (
