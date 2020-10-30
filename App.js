@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 const Tab = createBottomTabNavigator();
-const stack = createStackNavigator();
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { createContext } from 'react';
 import UserContext from "./src/UserContext"
@@ -19,6 +18,8 @@ import Social from './src/Social/Social.js';
 import Timer from './src/Timer/Timer.js';
 import Login from './src/Login/Login';
 
+
+const Stack = createStackNavigator();
 
 function TabNavigator() {
   return (      
