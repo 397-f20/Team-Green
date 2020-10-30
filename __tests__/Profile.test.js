@@ -17,16 +17,20 @@ describe('Profile', () => {
   })
 
   it('should show username text', () => {
-    const username = "Shaggy Rogers";
-    const header = render(<ProfileHeader title={username} img={"https://randomuser.me/api/portraits/men/1.jpg"} />);
-    const title = header.queryByText(username);
-    expect(title).toBeTruthy();
-    //expect(header.props.title).not.toBeNaN();
+    async () => {
+      const username = "Shaggy Rogers";
+      const header = render(<ProfileHeader title={username} img={"https://randomuser.me/api/portraits/men/1.jpg"} />);
+      const title = header.queryByText(username);
+      expect(title).toBeTruthy();
+      //expect(header.props.title).not.toBeNaN();
+    }
   })
 
   it('should show progress cycle chart', () => {
-    const profile = render(<Profile />);
-    const graphDisplayed = profile.queryByText(' Studying Progress (cycles) ');
-    expect(graphDisplayed).toBeTruthy();
+    async () => {
+      const profile = render(<Profile />);
+      const graphDisplayed = profile.queryByText(' Studying Progress (cycles) ');
+      expect(graphDisplayed).toBeTruthy();
+    }
   })
 });
