@@ -1,6 +1,6 @@
 // package dependencies
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View , KeyboardAvoidingView} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,7 +21,28 @@ import Login from './src/Login/Login';
 
 const Stack = createStackNavigator();
 
-function TabNavigator() {
+const App = () => {
+  return (
+    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS == "ios" ? "padding" : "height"}>
+      <MainNavigator />
+    </KeyboardAvoidingView>
+  )
+}
+
+const MainNavigator = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Login' head>
+        <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
+        <Stack.Screen name='Home' component={TabNavigator}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+
+
+const TabNavigator = () => {
   return (      
     <Tab.Navigator
       initialRouteName="Social"
@@ -59,23 +80,4 @@ function TabNavigator() {
   );
 }
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name='Login' component={Login}/>
-        <Stack.Screen name='Home' component={TabNavigator}/>
-      </Stack.Navigator>
-      
-    </NavigationContainer>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'lightblue',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     color: 'black',
     fontWeight: '500'
-    
   },
   currentSelectionTextCarat: {
     paddingHorizontal: 20,

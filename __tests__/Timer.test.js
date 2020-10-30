@@ -12,13 +12,6 @@ describe('Timer', () => {
     const start = timer.queryByText('Start')
     fireEvent.press(start);
 
-    // let renderedTime = '00:10';
-    // let timeIsThere = timer.queryByText(renderedTime);
-    // expect(timeIsThere).toBeTruthy(); 
-    // jest.runOnlyPendingTimers();
-    // renderedTime = '00:09';
-    // timeIsThere = timer.queryByText(renderedTime);
-    // expect(timeIsThere).toBeTruthy(); 
     for (let i = 10; i > 1; i--) {
       let renderedTime = '00:' + i.toString();
       if (i < 10) {

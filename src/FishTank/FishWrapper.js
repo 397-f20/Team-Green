@@ -12,7 +12,6 @@ const FishWrapper = (props) => {
   useEffect(() => {
     setRenderedFish([])
     setRenderedFish(props.fishObjects);
-    console.log(props.fishObjects);
   }, [props.fishObjects])
   return (
     <View>
