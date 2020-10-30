@@ -9,11 +9,15 @@ import ProfileHeader from '../src/Profile/ProfileHeader';
 
 describe('Profile', () => {
   it('should render Profile User Bar', () => {
-    render(<ProfileHeader />);
+    async () => {
+      render(<ProfileHeader />);
+    }
   })
 
   it('should render Profile Chart', () => {
-    render(<Profile />);
+    async () => {
+      render(<Profile />);
+    }
   })
 
   it('should show username text', () => {
