@@ -1,6 +1,6 @@
 // package dependencies
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View , KeyboardAvoidingView} from 'react-native';
+import { Platform, StyleSheet, Text, View , KeyboardAvoidingView} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
