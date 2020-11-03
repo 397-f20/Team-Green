@@ -34,7 +34,11 @@ const MainNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login' head>
         <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
-        <Stack.Screen name='Home' component={TabNavigator}/>
+        <Stack.Screen name='Home' component={TabNavigator} options={({route}) => ({
+            userData: route.params.userData,
+            userUid: route.params.userUid
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -71,10 +75,17 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen name="Social" component={Social} options={({route}) => ({
-        loggedInUser: route.params.username
+        userData: route.params.userData,
+        userUid: route.params.userUid
       })}/>
-      <Tab.Screen name="Timer" component={Timer} />
-      <Tab.Screen name="Profile" component={Profile} /> 
+      <Tab.Screen name="Timer" component={Timer} options={({route}) => ({
+        userData: route.params.userData,
+        userUid: route.params.userUid
+      })}/>
+      <Tab.Screen name="Profile" component={Profile} options={({route}) => ({
+        userData: route.params.userData,
+        userUid: route.params.userUid
+      })}/> 
     </Tab.Navigator>
     
   );

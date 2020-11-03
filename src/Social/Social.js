@@ -8,11 +8,11 @@ const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 const Social = ({route}) => {
 
-  
+  console.log(route.params)
 
   const [usersData, setUsersData] = useState({});
-  const [loggedInUser, setLoggedInUser] = useState({name: '', fish: 0});
-  const [fishRendered, setFishRendered] = useState([]);
+  const [displayedUser, setDisplayedUser] = useState(route.params.userData);
+  const [fishRendered, setFishRendered] = useState(route.params.userData.fishObjects);
   
 
   useEffect(() => {
@@ -21,21 +21,19 @@ const Social = ({route}) => {
       if (snap.val()) {
         const data = snap.val()
         setUsersData(data);
-        setLoggedInUser(data[route.params.username])
-        setFishRendered(data[route.params.username].fishObjects)
       }
     }, error => console.log(error));
   }, []);
 
   const changeUser = (user) => {
-    setLoggedInUser(usersData[user]);
+    setDisplayedUser(usersData[user]);
     setFishRendered(usersData[user].fishObjects);
   }
 
   return (
     <View style={styles.container}>
       <Background fishObjects={fishRendered} />
-      <Dropdown userData={usersData} loggedIn={loggedInUser.name} changeUser={changeUser} />
+      <Dropdown userData={usersData} loggedIn={displayedUser.displayName} changeUser={changeUser} />
     </View>
   );
 }

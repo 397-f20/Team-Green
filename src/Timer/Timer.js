@@ -6,6 +6,9 @@ import Background from '../FishTank/Background.js';
 import { fishArrayLength } from '../FishTank/FishArray';
 
 const Timer = () => {
+
+  console.log(route.params)
+
   const [user, setUser] = useState({});
   const [usr, setUsr] = useState({});
 

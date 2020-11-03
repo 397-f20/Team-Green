@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
 import { firebase } from '../../config/firebase'
+import 'firebase/auth';
 
 import Background from '../FishTank/Background.js';
 
@@ -9,20 +10,86 @@ const Login = ({navigation}) => {
 
 
     const [titleAnimated, setTitleAnimated] = useState(new Animated.Value(0));
+    const [displayName, setDisplayName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [createAccount, setCreateAccount] = useState(false);
+    const [auth, setAuth] = useState();
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         runTitleAnimation();
+        firebase.auth().onAuthStateChanged((auth) => {
+            setAuth(auth);
+        });
     }, [])
 
-    const login = () => {
-        const db = firebase.database().ref('login');
-        if (username in db && db[username] === password) {            
-            navigation.navigate('Social', { username });
+    useEffect(() => {
+        if (auth && auth.uid) {
+
+            // CHECK IF EXISTS
+            const db = firebase.database().ref('users').child(auth.uid);
+            
+            db.on('value', snap => {
+                if (snap.val()) {
+                    navigation.navigate('Home', {
+                        userData: snap.val(),
+                        userUid: auth.uid
+                    })
+                } else {
+                    const newUserData = {
+                        fish: 0,
+                        fishObjects: [],
+                        friends: {},
+                        history: {},
+                        name: displayName
+                    }
+                    firebase.database().ref('users/' + auth.uid).set(newUserData);
+                    navigation.navigate('Home', {
+                        userData: newUserData,
+                        userUid: auth.uid
+                    })
+                }
+            }, error => alert(error))
+
+            // IF EXISTS THEN GET DATA -->
+
+            // IF NOT EXISTS THEN CREATE OBJECT AND PUSH TO DB
+
+            db.on('value', snap => {
+                navigation.navigate('Social', {
+                    userData: snap.val(),
+                    userUid: auth.uid
+                })
+            }, error => alert(error));
         }
-        else {
-            Alert.alert('Username or password incorrect');
+    }, [auth])
+
+    const validate = () => {
+        if (password.length < 6) {
+            setErrorMessage('Error: password must be at least 6 characters');
+            return false;
+        }
+        if (password !== confirmPassword) {
+            setErrorMessage('Error: password fields do not match')
+            return false;
+        }
+        if (displayName === '') {
+            setErrorMessage('Error: please enter a display name')
+            return false;
+        }
+        return true;
+    }
+
+    const login = () => {
+        if (createAccount) {
+            const validated = validate();
+            if (validated) {
+                firebase.auth().createUserWithEmailAndPassword(username, password);
+            }
+        } else {
+            firebase.auth().signInWithEmailAndPassword(username, password);
         }    
     }
 
@@ -70,11 +137,19 @@ const Login = ({navigation}) => {
     return ( 
         <View style={styles.container}>
             <Background fishObjects={backgroundFish} />
-            <Animated.Text style={{...styles.pageTitle, ...titleColors}}>TEMPO</Animated.Text>
+            <Animated.Text style={{...styles.pageTitle, color: 'black'}}>TEMPO</Animated.Text>
             <View style={styles.formContainer}>
+                {errorMessage.length > 0 && <Text style={styles.errorMessage}>{ errorMessage }</Text>}
+                {createAccount && <TextInput 
+                    style={styles.field} 
+                    placeholder='Display name'
+                    placeholderTextColor='rgb(0, 164, 228)'
+                    value={displayName} 
+                    onChangeText={value => setDisplayName(value)}>
+                </TextInput>}
                 <TextInput 
                     style={styles.field} 
-                    placeholder='Username'
+                    placeholder='Email'
                     placeholderTextColor='rgb(0, 164, 228)'
                     value={username} 
                     onChangeText={value => setUsername(value)}>
@@ -87,10 +162,22 @@ const Login = ({navigation}) => {
                     value={password}
                     onChangeText={value => setPassword(value)}>
                 </TextInput>
+                {createAccount && <TextInput
+                    style={styles.field} 
+                    placeholder='Confirm password' 
+                    secureTextEntry={true} 
+                    placeholderTextColor='rgb(0, 164, 228)'
+                    value={confirmPassword}
+                    onChangeText={value => setConfirmPassword(value)}
+                >
+                </TextInput>}
                 <TouchableOpacity onPress={login} activeOpacity={1}>
                     <View style={styles.button}>
-                        <Text style={styles.text}>Login</Text>
+                        <Text style={styles.text}>{createAccount ? 'Create account' : 'Sign in'}</Text>
                     </View>                
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCreateAccount(!createAccount)}>
+                    <Text style={styles.createAccountButton}>or, {createAccount ? 'go back to sign in' : 'create an account'}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -110,7 +197,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         letterSpacing: 7,
         position: 'absolute',
-        top: 200
+        top: 200,
     },
     formContainer: {
         padding: 20, 
@@ -126,6 +213,11 @@ const styles = StyleSheet.create({
         shadowRadius: 16,
         elevation: 5,
         marginTop: 300
+    },
+    errorMessage: {
+        fontSize: 14,
+        color: 'red',
+        marginBottom: 15
     },
     field: {
         backgroundColor: 'rgba(255, 255, 255, .9)',
@@ -145,6 +237,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 164, 228, 0.8)',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    createAccountButton: {
+        textDecorationLine: 'underline',
+        fontSize: 14,
+        color: 'rgb(7, 54, 72)',
+        marginTop: 10,
+        alignSelf: 'center'
     }
 })
 
