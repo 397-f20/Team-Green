@@ -19,9 +19,12 @@ import Login from './src/Login/Login';
 const Stack = createStackNavigator();
 
 const App = () => {
+  const [context, setContext] = useState({userData: null, userUID: null});
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS == "ios" ? "padding" : "height"}>
-      <MainNavigator />
+      <UserContext.Provider value={[context, setContext]}>
+        <MainNavigator />
+      </UserContext.Provider>
     </KeyboardAvoidingView>
   )
 }
@@ -29,55 +32,49 @@ const App = () => {
 const MainNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login' head>
+      <Stack.Navigator initialRouteName='Login' headerMode="none">
         <Stack.Screen name='Login' component={Login}/>
-        <Stack.Screen name='Home' component={Home} options={({route}) => ({
-          userData: route.params.userData,
-          userUID: route.params.userUID
-        })}
-        />
+        <Stack.Screen name='Home' component={Home}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-const Home = ({route}) => {
+const Home = () => {
   return (      
-    <UserContext.Provider value={route}>
-      <Tab.Navigator
-        initialRouteName="Social"
-        tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
-            let iconName;
+    <Tab.Navigator
+      initialRouteName="Social"
+      tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
+          let iconName;
 
-            if (route.name === 'Social') {
-              iconName = focused
-                ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
-                : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
-            } else if (route.name === 'Timer') {
-              iconName = focused 
-                ? <AntDesign name="clockcircle" size={24} color="black" /> 
-                : <AntDesign name="clockcircleo" size={24} color="#2a2a72" />;
-            } else if (route.name === 'Profile') {
-              iconName = focused
-                ? <FontAwesome name="user" size={24} color="black" />
-                : <AntDesign name="user" size={24} color="#2a2a72" />
-            }
+          if (route.name === 'Social') {
+            iconName = focused
+              ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
+              : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
+          } else if (route.name === 'Timer') {
+            iconName = focused 
+              ? <AntDesign name="clockcircle" size={24} color="black" /> 
+              : <AntDesign name="clockcircleo" size={24} color="#2a2a72" />;
+          } else if (route.name === 'Profile') {
+            iconName = focused
+              ? <FontAwesome name="user" size={24} color="black" />
+              : <AntDesign name="user" size={24} color="#2a2a72" />
+          }
 
-            // You can return any component that you like here!
-            return iconName;
-          },
-        })}
-      >
-        <Tab.Screen name="Social" component={Social} 
-        />
-        <Tab.Screen name="Timer" component={Timer}
-        />
-        <Tab.Screen name="Profile" component={Profile} 
-        /> 
-      </Tab.Navigator>
-    </UserContext.Provider>
+          // You can return any component that you like here!
+          return iconName;
+        },
+      })}
+    >
+      <Tab.Screen name="Social" component={Social} 
+      />
+      <Tab.Screen name="Timer" component={Timer}
+      />
+      <Tab.Screen name="Profile" component={Profile} 
+      /> 
+    </Tab.Navigator>
   );
 }
 

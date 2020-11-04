@@ -14,7 +14,7 @@ const Dropdown = (props) => {
     <View >
       <TouchableOpacity activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
         <View style={styles.currentSelection}>
-          <Text style={styles.currentSelectionText}>{props.loggedIn}</Text>
+          <Text style={styles.currentSelectionText}>{props.selectedUser} {props.selectedUser === props.loggedIn ? "(You)" : ""}</Text>
           <Text style={styles.currentSelectionTextCarat}>&#8964;</Text>
         </View>
       </TouchableOpacity>
@@ -25,7 +25,7 @@ const Dropdown = (props) => {
         >
           {
             Object.keys(props.userData).map((user, index) => (
-              <SingleOption user={props.userData[user]} key={index} changeUser={() => changeUser(user)} />
+              <SingleOption user={props.userData[user]} key={index} changeUser={() => changeUser(user)} loggedIn={props.loggedIn} />
             ))
           }
         </ScrollView>}
@@ -37,7 +37,7 @@ const SingleOption = (props) => {
   return (
     <TouchableOpacity onPress={props.changeUser}>
       <View style={styles.singleOption}>
-        <Text>{props.user.name}</Text>
+        <Text>{props.user.name} {props.user.name === props.loggedIn ? "(You)" : ""}</Text>
       </View>
     </TouchableOpacity>
   )

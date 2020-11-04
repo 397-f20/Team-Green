@@ -9,10 +9,10 @@ import UserContext from '../UserContext';
 
 const Timer = () => {
 
-  const data = React.useContext(UserContext);
-  console.log(data.params.params.userData)
+  const [context, setContext]= useContext(UserContext);
   const [user, setUser] = useState({});
-  const [usr, setUsr] = useState(data.params.params.userData);
+  const [usr, setUsr] = useState(context.userData);
+
 
   const [time, setTime] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
@@ -28,8 +28,10 @@ const Timer = () => {
     db.on('value', snap => {
       if (snap.val()) {
         setUser(snap.val());
-        if (usr.id in user){
-          setHistory(user[usr.id].history);
+        console.log("death")
+        console.log(usr)
+        if (usr.id in snap.val()){
+          setHistory(snap.val()[usr.id].history);
         }
         if (usr){
           setFishRendered(snap.val()[usr.id].fishObjects);
@@ -79,7 +81,7 @@ const Timer = () => {
     const day = now.getUTCDay();
     const today = new Date(Date.UTC(year, month, day));
     const key = today.valueOf();
-    if (history[key]){
+    if (history && history[key]){
       firebase.database().ref('users').child(userId).child('history').child(key).set( history[key] + 1);
     }
     else{

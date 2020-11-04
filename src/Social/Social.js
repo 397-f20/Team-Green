@@ -4,11 +4,12 @@ import { firebase } from '../../config/firebase'
 
 import Background from '../FishTank/Background.js';
 import Dropdown from './Dropdown.js';
+import UserContext from '../UserContext';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-const Social = ({route}) => {
-
+const Social = () => {
+  const [context, setContext] = useContext(UserContext);
   const [usersData, setUsersData] = useState({});
   const [displayedUser, setDisplayedUser] = useState({});
   const [fishRendered, setFishRendered] = useState({});
@@ -20,9 +21,9 @@ const Social = ({route}) => {
         const data = snap.val()
         setUsersData(data);
       }
-      if (route.params.userData){
-        setDisplayedUser(route.params.userData);
-        setFishRendered(route.params.userData.fishObjects);
+      if (context.userData){
+        setDisplayedUser(context.userData);
+        setFishRendered(context.userData.fishObjects);
       }
     }, error => console.log(error));
   }, []);
@@ -39,7 +40,7 @@ const Social = ({route}) => {
   return (
     <View style={styles.container}>
       <Background fishObjects={fishRendered} />
-      <Dropdown userData={usersData} loggedIn={displayedUser.name} changeUser={changeUser} />
+      <Dropdown userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} />
     </View>
   );
 }

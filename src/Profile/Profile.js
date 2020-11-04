@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { firebase } from '../../config/firebase'
 import { Dimensions } from "react-native";
 import { BarChart, LineChart } from "react-native-chart-kit";
@@ -19,11 +19,11 @@ const chartConfig = {
   decimalPlaces: 0, // optional, defaults to 2dp
 };
 
-const Profile = () => {
-  const data = React.useContext(UserContext);
+const Profile = ({navigation}) => {
+  const [context, setContext] = useContext(UserContext);
 
   const [user, setUser] = useState({});
-  const [usr, setUsr] = useState(data.params.params.userData);
+  const [usr, setUsr] = useState(context.userData);
 
   const [history, setHistory] = useState({});
   const [segments, setSegments] = useState(2);
@@ -79,7 +79,12 @@ const Profile = () => {
           chartConfig={chartConfig}
           fromZero={true}
           segments={segments < 10 ? segments : 5}          
-        />        
+        />       
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <View style={styles.logout}>
+            <Text>Log Out</Text>
+          </View>
+        </TouchableOpacity> 
       </ScrollView>
     </View>
   )
@@ -105,6 +110,11 @@ const styles = StyleSheet.create({
   username: {
     marginTop: 20,
     fontSize: 16
+  },
+  logout:{
+    alignItems: 'center', 
+    alignSelf:'center', 
+    marginVertical: 20,
   }
 });
 

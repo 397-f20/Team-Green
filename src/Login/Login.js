@@ -4,55 +4,22 @@ import { firebase } from '../../config/firebase'
 import 'firebase/auth';
 
 import Background from '../FishTank/Background.js';
+import UserContext from '../UserContext';
 
 const Login = ({navigation}) => {
+    const [context, setContext] = useContext(UserContext);
+
     const [titleAnimated, setTitleAnimated] = useState(new Animated.Value(0));
     const [displayName, setDisplayName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [createAccount, setCreateAccount] = useState(false);
-    const [auth, setAuth] = useState();
     const [errorMessage, setErrorMessage] = useState('');
-    const [userData, setUserData] = useState({});
 
     useEffect(() => {
         runTitleAnimation();
-        firebase.auth().onAuthStateChanged((auth) => {
-            setAuth(auth);
-        });
     }, [])
-
-    useEffect(() => {
-        if (auth && auth.uid) {
-
-            // CHECK IF EXISTS
-            const db = firebase.database().ref('users').child(auth.uid);
-            
-            db.on('value', snap => {
-                if (snap.val()) {
-                    setUserData({
-                        userData: snap.val(),
-                        userUid: auth.uid
-                    })
-                } else {
-                    const newUserData = {
-                        fish: 0,
-                        fishObjects: {},
-                        friends: {},
-                        history: [],
-                        id: auth.uid,
-                        name: displayName
-                    }
-                    firebase.database().ref('users/' + auth.uid).set(newUserData);
-                    setUserData({
-                        userData: newUserData,
-                        userUid: auth.uid
-                    })
-                }
-            }, error => alert(error))
-        }
-    }, [auth])
 
     const validate = () => {
         //NEED TO ADD SIGN IN VALIDATION 
@@ -75,12 +42,44 @@ const Login = ({navigation}) => {
         if (createAccount) {
             const validated = validate();
             if (validated) {
-                firebase.auth().createUserWithEmailAndPassword(username, password);
-                navigation.navigate('Home', {screen: 'Social', params: userData});
+                firebase.auth().createUserWithEmailAndPassword(username, password).then(function (user) {
+                    var user = firebase.auth().currentUser;
+                    const newUserData = {
+                        fish: 0,
+                        fishObjects: {},
+                        friends: {},
+                        history: [],
+                        id: user.uid,
+                        name: displayName
+                    }
+                    firebase.database().ref('users/' + user.uid).set(newUserData);
+                    setContext({
+                        userData: newUserData,
+                        userUid: user.uid
+                    })
+                    navigation.navigate('Home', {screen: 'Social'});
+                }, function (error){
+                    console.log(error.message);
+                    setErrorMessage(error.message);
+                })
             }
         } else {
-            firebase.auth().signInWithEmailAndPassword(username, password);
-            navigation.navigate('Home', {screen: 'Social', params: userData});
+            firebase.auth().signInWithEmailAndPassword(username, password).then(function(user) {
+                var user = firebase.auth().currentUser;
+                const db = firebase.database().ref('users').child(user.uid);
+                db.on('value', snap => {
+                    if (snap.val()) {
+                        setContext({
+                            userData: snap.val(),
+                            userUid: user.uid
+                        })
+                        navigation.navigate('Home', {screen: 'Social'});
+                    } 
+                }, error => alert(error))
+            }, function (error){
+                console.log(error.message);
+                setErrorMessage(error.message);
+            })
         }    
     }
 
