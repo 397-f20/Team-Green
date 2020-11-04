@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { firebase } from '../../config/firebase'
 import { Dimensions } from "react-native";
 import { BarChart, LineChart } from "react-native-chart-kit";
 import ProfileHeader from "./ProfileHeader"
+import UserContext from '../UserContext';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -18,9 +19,11 @@ const chartConfig = {
   decimalPlaces: 0, // optional, defaults to 2dp
 };
 
-const Profile = () => {
+const Profile = ({navigation}) => {
+  const [context, setContext] = useContext(UserContext);
+
   const [user, setUser] = useState({});
-  const [usr, setUsr] = useState({ "friends": [] });
+  const [usr, setUsr] = useState(context.userData);
 
   const [history, setHistory] = useState({});
   const [segments, setSegments] = useState(2);
@@ -34,21 +37,28 @@ const Profile = () => {
     }, error => console.log(error));
   }, []);
 
-
-  // Currently user being the users list from JSON and usr being the individual user
-  // const usr = user.a;
   useEffect(() => {
-    if ("a" in user) {
-      setUsr(user.a);
-      setHistory(user.a.history);
-      let max = Object.values(user.a.history).reduce(function (a, b) { return Math.max(a, b); });
-      setSegments(max);
-    }
+      if (usr){
+        if (usr.id in user){
+          setHistory(user[usr.id].history);
+          let max = Object.values(user[usr.id].history).reduce(function (a, b) { return Math.max(a, b); });
+          setSegments(max);
+        }
+      }
   }, [user])
 
+  // Formats date as month-day
+  function getDate (ms) {
+    const date = new Date();
+    date.setTime(ms);
+
+    const month = date.getMonth() + 1;
+    const day = date.getDay();
+    return `${month}-${day}`;
+  }
 
   function constructData(history) {
-    let labels = Object.keys(history).map(e => e.slice(0, 10));
+    let labels = Object.keys(history).map(e => getDate(e));
     let dataPoints = Object.values(history);
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
@@ -61,18 +71,20 @@ const Profile = () => {
           Congratulations! You have studied {Object.values(history).length} days in total!
         </Text>
         <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
-
-        <View>
-        <BarChart
+        <LineChart
           style={styles.graphStyle}
           data={constructData(history)}
           width={screenWidth * 0.9}
           height={220}
           chartConfig={chartConfig}
           fromZero={true}
-          segments={segments < 10 ? segments : 5}
-        />
-        </View>
+          segments={segments < 10 ? segments : 5}          
+        />       
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <View style={styles.logout}>
+            <Text>Log Out</Text>
+          </View>
+        </TouchableOpacity> 
       </ScrollView>
     </View>
   )
@@ -98,6 +110,11 @@ const styles = StyleSheet.create({
   username: {
     marginTop: 20,
     fontSize: 16
+  },
+  logout:{
+    alignItems: 'center', 
+    alignSelf:'center', 
+    marginVertical: 20,
   }
 });
 
