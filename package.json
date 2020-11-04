@@ -9,9 +9,11 @@
     "deploy": "yarn run build && firebase deploy",
     "eject": "expo eject",
     "test": "jest",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:ci": "cypress run --config video=false",
+    "test:ci": "jest --watchAll=false && start-server-and-test web http://localhost:3000 cypress:ci"
   },
-  "esintConfig":{
+  "esintConfig": {
     "extends": [
       "plugin:cypress/recommended"
     ]
@@ -19,7 +21,8 @@
   "jest": {
     "preset": "jest-expo",
     "testMatch": [
-      "**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+test.[jt]s?(x)"
+      "**/__tests__/**/*.[jt]s?(x)",
+      "**/?(*.)+test.[jt]s?(x)"
     ]
   },
   "dependencies": {
@@ -55,7 +58,8 @@
     "@babel/core": "~7.9.0",
     "@testing-library/react-native": "^7.1.0",
     "cypress": "^5.5.0",
-    "expo-cli": "^3.28.0"
+    "expo-cli": "^3.28.0",
+    "start-server-and-test": "^1.11.5"
   },
   "private": true
 }
