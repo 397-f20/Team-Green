@@ -6,11 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 const Tab = createBottomTabNavigator();
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons';
-import { createContext } from 'react';
-import UserContext from "./src/UserContext"
-import {firebase} from './config/firebase'
-
-import userJSON from './test_data/users.json'
+import {firebase} from './config/firebase';
+import UserContext from './src/UserContext';
 
 // components
 import Profile from './src/Profile/Profile.js';
@@ -33,61 +30,54 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login' head>
-        <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
-        <Stack.Screen name='Home' component={TabNavigator} options={({route}) => ({
-            userData: route.params.userData,
-            userUid: route.params.userUid
-          })}
+        <Stack.Screen name='Login' component={Login}/>
+        <Stack.Screen name='Home' component={Home} options={({route}) => ({
+          userData: route.params.userData,
+          userUID: route.params.userUID
+        })}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-
-
-const TabNavigator = () => {
+const Home = ({route}) => {
   return (      
-    <Tab.Navigator
-      initialRouteName="Social"
-      tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => {
-          let iconName;
+    <UserContext.Provider value={route}>
+      <Tab.Navigator
+        initialRouteName="Social"
+        tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconName;
 
-          if (route.name === 'Social') {
-            iconName = focused
-              ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
-              : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
-          } else if (route.name === 'Timer') {
-            iconName = focused 
-              ? <AntDesign name="clockcircle" size={24} color="black" /> 
-              : <AntDesign name="clockcircleo" size={24} color="#2a2a72" />;
-          } else if (route.name === 'Profile') {
-            iconName = focused
-              ? <FontAwesome name="user" size={24} color="black" />
-              : <AntDesign name="user" size={24} color="#2a2a72" />
-          }
+            if (route.name === 'Social') {
+              iconName = focused
+                ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
+                : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
+            } else if (route.name === 'Timer') {
+              iconName = focused 
+                ? <AntDesign name="clockcircle" size={24} color="black" /> 
+                : <AntDesign name="clockcircleo" size={24} color="#2a2a72" />;
+            } else if (route.name === 'Profile') {
+              iconName = focused
+                ? <FontAwesome name="user" size={24} color="black" />
+                : <AntDesign name="user" size={24} color="#2a2a72" />
+            }
 
-          // You can return any component that you like here!
-          return iconName;
-        },
-      })}
-    >
-      <Tab.Screen name="Social" component={Social} options={({route}) => ({
-        userData: route.params.userData,
-        userUid: route.params.userUid
-      })}/>
-      <Tab.Screen name="Timer" component={Timer} options={({route}) => ({
-        userData: route.params.userData,
-        userUid: route.params.userUid
-      })}/>
-      <Tab.Screen name="Profile" component={Profile} options={({route}) => ({
-        userData: route.params.userData,
-        userUid: route.params.userUid
-      })}/> 
-    </Tab.Navigator>
-    
+            // You can return any component that you like here!
+            return iconName;
+          },
+        })}
+      >
+        <Tab.Screen name="Social" component={Social} 
+        />
+        <Tab.Screen name="Timer" component={Timer}
+        />
+        <Tab.Screen name="Profile" component={Profile} 
+        /> 
+      </Tab.Navigator>
+    </UserContext.Provider>
   );
 }
 

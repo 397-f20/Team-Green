@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import { Image, Animated, StyleSheet } from 'react-native';
-import { fishArray, fishArrayLength } from './FishArray.js';
+import { fishArray } from './FishArray.js';
 
-const Fish = (props) => {
+const Fish = ( props ) => {
 
   const [fishAnimated, setFishAnimated] = useState(new Animated.Value(0));
   const animationDuration = 250000 * props.random + 75000;
@@ -32,7 +32,6 @@ const Fish = (props) => {
 
   // TO DO
   const getTranslateX = () => {
-
     const difference = (props.SCREEN_WIDTH - initialLeft);
     const moveRight = ((props.SCREEN_WIDTH - 50) - initialLeft);
     const moveLeft = (25 - initialLeft); 
@@ -42,7 +41,6 @@ const Fish = (props) => {
     } else {
       return [0, moveLeft + 10, moveLeft, moveLeft + 10, moveRight - 10, moveRight, moveRight - 10, moveLeft + 10, moveLeft, moveLeft + 10, -10, 0];
     }
-
   }
 
    // TO DO
@@ -57,7 +55,6 @@ const Fish = (props) => {
   }
 
   useEffect(() => {
-
     runFishAnimation();
   }, [])
 

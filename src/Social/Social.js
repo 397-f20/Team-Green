@@ -1,20 +1,18 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { firebase } from '../../config/firebase'
+
 import Background from '../FishTank/Background.js';
 import Dropdown from './Dropdown.js';
-const SCREEN_WIDTH = Dimensions.get('screen').width;
 
+const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 const Social = ({route}) => {
 
-  console.log(route.params)
-
   const [usersData, setUsersData] = useState({});
-  const [displayedUser, setDisplayedUser] = useState(route.params.userData);
-  const [fishRendered, setFishRendered] = useState(route.params.userData.fishObjects);
+  const [displayedUser, setDisplayedUser] = useState({});
+  const [fishRendered, setFishRendered] = useState({});
   
-
   useEffect(() => {
     const db = firebase.database().ref('users');
     db.on('value', snap => {
@@ -22,18 +20,26 @@ const Social = ({route}) => {
         const data = snap.val()
         setUsersData(data);
       }
+      if (route.params.userData){
+        setDisplayedUser(route.params.userData);
+        setFishRendered(route.params.userData.fishObjects);
+      }
     }, error => console.log(error));
   }, []);
 
   const changeUser = (user) => {
-    setDisplayedUser(usersData[user]);
-    setFishRendered(usersData[user].fishObjects);
+    if (user){
+      if (user in usersData){
+        setDisplayedUser(usersData[user]);
+        setFishRendered(usersData[user].fishObjects);
+      }
+    }
   }
 
   return (
     <View style={styles.container}>
       <Background fishObjects={fishRendered} />
-      <Dropdown userData={usersData} loggedIn={displayedUser.displayName} changeUser={changeUser} />
+      <Dropdown userData={usersData} loggedIn={displayedUser.name} changeUser={changeUser} />
     </View>
   );
 }

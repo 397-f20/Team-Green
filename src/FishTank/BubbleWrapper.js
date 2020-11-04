@@ -1,6 +1,6 @@
 // package dependencies
 import React, { useState } from 'react'
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 
 // components
 import Bubble from './Bubble.js';
@@ -41,7 +41,7 @@ const BubbleWrapper = () => {
   const [bubblesObjSix, setBubblesObjSix] = useState(<Bubble delay={15000} time={30000} index={6} finished={restartBubble} />)
 
   return (
-    <View style={{position: 'absolute', height: SCREEN_HEIGHT, width: SCREEN_WIDTH, top: 0}}>
+    <View style={styles.container}>
       { bubblesObjOne }
       { bubblesObjTwo }
       { bubblesObjThree }
@@ -51,5 +51,14 @@ const BubbleWrapper = () => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute', 
+    height: SCREEN_HEIGHT, 
+    width: SCREEN_WIDTH, 
+    top: 0
+  },
+})
 
 export default BubbleWrapper;

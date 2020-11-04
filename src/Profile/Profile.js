@@ -4,6 +4,7 @@ import { firebase } from '../../config/firebase'
 import { Dimensions } from "react-native";
 import { BarChart, LineChart } from "react-native-chart-kit";
 import ProfileHeader from "./ProfileHeader"
+import UserContext from '../UserContext';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -19,8 +20,10 @@ const chartConfig = {
 };
 
 const Profile = () => {
+  const data = React.useContext(UserContext);
+
   const [user, setUser] = useState({});
-  const [usr, setUsr] = useState({ "friends": [] });
+  const [usr, setUsr] = useState(data.params.params.userData);
 
   const [history, setHistory] = useState({});
   const [segments, setSegments] = useState(2);
@@ -34,16 +37,14 @@ const Profile = () => {
     }, error => console.log(error));
   }, []);
 
-
-  // Currently user being the users list from JSON and usr being the individual user
-  // const usr = user.a;
   useEffect(() => {
-    if ("a" in user) {
-      setUsr(user.a);
-      setHistory(user.a.history);
-      let max = Object.values(user.a.history).reduce(function (a, b) { return Math.max(a, b); });
-      setSegments(max);
-    }
+      if (usr){
+        if (usr.id in user){
+          setHistory(user[usr.id].history);
+          let max = Object.values(user[usr.id].history).reduce(function (a, b) { return Math.max(a, b); });
+          setSegments(max);
+        }
+      }
   }, [user])
 
   // Formats date as month-day

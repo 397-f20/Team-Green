@@ -2,21 +2,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {firebase} from '../../config/firebase'
+
 import Background from '../FishTank/Background.js';
 import { fishArrayLength } from '../FishTank/FishArray';
+import UserContext from '../UserContext';
 
 const Timer = () => {
 
-  console.log(route.params)
-
+  const data = React.useContext(UserContext);
+  console.log(data.params.params.userData)
   const [user, setUser] = useState({});
-  const [usr, setUsr] = useState({});
+  const [usr, setUsr] = useState(data.params.params.userData);
 
   const [time, setTime] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
   const [completedTask, setCompletedTask] = useState(false);
   const [isStopped, setIsStopped] = useState(true);
   const [fishRendered, setFishRendered] = useState([]);
+  const [history, setHistory] = useState([]);
 
   const timerDuration = 10; 
 
@@ -25,17 +28,23 @@ const Timer = () => {
     db.on('value', snap => {
       if (snap.val()) {
         setUser(snap.val());
-        setFishRendered(snap.val().a.fishObjects);
+        if (usr.id in user){
+          setHistory(user[usr.id].history);
+        }
+        if (usr){
+          setFishRendered(snap.val()[usr.id].fishObjects);
+        }
       }
     }, error => console.log(error));
   }, []);
 
   // const usr = user.a;
-  useEffect(()=>{
+  /*useEffect(()=>{
     if ("a" in user) {
       setUsr(user.a);
     }
   }, [user])
+  */
 
   useEffect(() => {  
     if (time===0 && !isPaused){
@@ -64,10 +73,14 @@ const Timer = () => {
   }
 
   function updateHistory(userId) {
-    const today = new Date(Date.now());
+    const now = new Date(Date.now());
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth();
+    const day = now.getUTCDay();
+    const today = new Date(Date.UTC(year, month, day));
     const key = today.valueOf();
-    if (usr.history[today]) {
-      firebase.database().ref('users').child(userId).child('history').child(key).set( usr.history[key] + 1);
+    if (history[key]){
+      firebase.database().ref('users').child(userId).child('history').child(key).set( history[key] + 1);
     }
     else{
       firebase.database().ref('users').child(userId).child('history').child(key).set(1);
@@ -101,10 +114,9 @@ const Timer = () => {
 
   return (
     <View style={styles.timer}>
-
       <Background fishObjects={fishRendered} />
-
-       <CountdownCircleTimer
+      
+      <CountdownCircleTimer
         key={isStopped || time=== 0}
         isPlaying={!isPaused}
         duration={timerDuration}

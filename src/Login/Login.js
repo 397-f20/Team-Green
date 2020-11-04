@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
 import { firebase } from '../../config/firebase'
 import 'firebase/auth';
 
 import Background from '../FishTank/Background.js';
 
-
 const Login = ({navigation}) => {
-
-
     const [titleAnimated, setTitleAnimated] = useState(new Animated.Value(0));
     const [displayName, setDisplayName] = useState('');
     const [username, setUsername] = useState('');
@@ -17,6 +14,7 @@ const Login = ({navigation}) => {
     const [createAccount, setCreateAccount] = useState(false);
     const [auth, setAuth] = useState();
     const [errorMessage, setErrorMessage] = useState('');
+    const [userData, setUserData] = useState({});
 
     useEffect(() => {
         runTitleAnimation();
@@ -33,40 +31,31 @@ const Login = ({navigation}) => {
             
             db.on('value', snap => {
                 if (snap.val()) {
-                    navigation.navigate('Home', {
+                    setUserData({
                         userData: snap.val(),
                         userUid: auth.uid
                     })
                 } else {
                     const newUserData = {
                         fish: 0,
-                        fishObjects: [],
+                        fishObjects: {},
                         friends: {},
-                        history: {},
+                        history: [],
+                        id: auth.uid,
                         name: displayName
                     }
                     firebase.database().ref('users/' + auth.uid).set(newUserData);
-                    navigation.navigate('Home', {
+                    setUserData({
                         userData: newUserData,
                         userUid: auth.uid
                     })
                 }
             }, error => alert(error))
-
-            // IF EXISTS THEN GET DATA -->
-
-            // IF NOT EXISTS THEN CREATE OBJECT AND PUSH TO DB
-
-            db.on('value', snap => {
-                navigation.navigate('Social', {
-                    userData: snap.val(),
-                    userUid: auth.uid
-                })
-            }, error => alert(error));
         }
     }, [auth])
 
     const validate = () => {
+        //NEED TO ADD SIGN IN VALIDATION 
         if (password.length < 6) {
             setErrorMessage('Error: password must be at least 6 characters');
             return false;
@@ -87,9 +76,11 @@ const Login = ({navigation}) => {
             const validated = validate();
             if (validated) {
                 firebase.auth().createUserWithEmailAndPassword(username, password);
+                navigation.navigate('Home', {screen: 'Social', params: userData});
             }
         } else {
             firebase.auth().signInWithEmailAndPassword(username, password);
+            navigation.navigate('Home', {screen: 'Social', params: userData});
         }    
     }
 
@@ -111,7 +102,7 @@ const Login = ({navigation}) => {
         ).start()
     }
 
-    const titleOpacity = 0.7
+    const titleOpacity = 0.7;
     const titleColors = {
         color: titleAnimated.interpolate({
             inputRange: [0, 0.25, 0.5, 0.75, 1],
@@ -123,7 +114,7 @@ const Login = ({navigation}) => {
                 'rgba(7, 54, 72,' + titleOpacity + ')'
             ]
         })
-    }
+    };
 
     const backgroundFish = [
         {idx: 0, size: 80}, 
@@ -132,7 +123,7 @@ const Login = ({navigation}) => {
         {idx: 1, size: 44}, 
         {idx: 2, size: 44}, 
         {idx: 5, size: 70}
-    ]
+    ];
 
     return ( 
         <View style={styles.container}>
