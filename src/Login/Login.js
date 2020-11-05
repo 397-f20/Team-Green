@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
 import { firebase } from '../../config/firebase'
 import 'firebase/auth';
+import { Validation } from './Validation';
 
 import Background from '../FishTank/Background.js';
 import UserContext from '../UserContext';
@@ -21,26 +22,9 @@ const Login = ({navigation}) => {
         runTitleAnimation();
     }, [])
 
-    const validate = () => {
-        //NEED TO ADD SIGN IN VALIDATION 
-        if (password.length < 6) {
-            setErrorMessage('Error: password must be at least 6 characters');
-            return false;
-        }
-        if (password !== confirmPassword) {
-            setErrorMessage('Error: password fields do not match')
-            return false;
-        }
-        if (displayName === '') {
-            setErrorMessage('Error: please enter a display name')
-            return false;
-        }
-        return true;
-    }
-
     const login = () => {
         if (createAccount) {
-            const validated = validate();
+            const validated = Validation(displayName, password, confirmPassword, setErrorMessage);
             if (validated) {
                 firebase.auth().createUserWithEmailAndPassword(username, password).then(function (user) {
                     var user = firebase.auth().currentUser;
