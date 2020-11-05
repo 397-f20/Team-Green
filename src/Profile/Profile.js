@@ -80,9 +80,9 @@ const Profile = ({navigation}) => {
           fromZero={true}
           segments={segments < 10 ? segments : 5}          
         />       
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity style={{alignSelf: 'stretch', marginHorizontal: 20}} onPress={() => navigation.navigate("Login")}>
           <View style={styles.logout}>
-            <Text>Log Out</Text>
+            <Text style={{color: 'white', paddingVertical: 10, fontSize: 18, fontWeight: '500'}}>Log Out</Text>
           </View>
         </TouchableOpacity> 
       </ScrollView>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'lightblue',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   graphStyle: {
     borderRadius: 16,
@@ -113,8 +113,11 @@ const styles = StyleSheet.create({
   },
   logout:{
     alignItems: 'center', 
-    alignSelf:'center', 
+    alignSelf:'stretch', 
     marginVertical: 20,
+    backgroundColor: 'rgb(7, 54, 72)',
+    justifyContent: 'center',
+    borderRadius: 12
   }
 });
 
