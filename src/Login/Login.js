@@ -127,7 +127,9 @@ const Login = ({navigation}) => {
     return ( 
         <View style={styles.container}>
             <Background fishObjects={backgroundFish} />
-            <Animated.Text style={{...styles.pageTitle, color: 'black'}}>TEMPO</Animated.Text>
+            <View style={styles.pageTitleContainer}>
+                <Animated.Text style={[styles.pageTitle, titleColors]}>TEMPO</Animated.Text>
+            </View>
             <View style={styles.formContainer}>
                 {errorMessage.length > 0 && <Text style={styles.errorMessage}>{ errorMessage }</Text>}
                 {createAccount && <TextInput 
@@ -177,9 +179,12 @@ const Login = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'stretch',
         justifyContent: 'center',
         flexDirection: 'column',
+    },
+    pageTitleContainer: {
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     pageTitle: {
         fontSize: 60,
@@ -187,7 +192,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         letterSpacing: 7,
         position: 'absolute',
-        top: 200,
     },
     formContainer: {
         padding: 20, 
