@@ -6,6 +6,7 @@ import {firebase} from '../../config/firebase'
 import Background from '../FishTank/Background.js';
 import { fishArrayLength } from '../FishTank/FishArray';
 import UserContext from '../UserContext';
+import UseFishFoodModal from './UseFishFoodModal.js';
 
 const Timer = () => {
 
@@ -13,13 +14,14 @@ const Timer = () => {
   const [user, setUser] = useState({});
   const [usr, setUsr] = useState(context.userData);
 
-
   const [time, setTime] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
   const [completedTask, setCompletedTask] = useState(false);
   const [isStopped, setIsStopped] = useState(true);
   const [fishRendered, setFishRendered] = useState([]);
   const [history, setHistory] = useState([]);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const timerDuration = 10; 
 
@@ -50,11 +52,7 @@ const Timer = () => {
 
   useEffect(() => {  
     if (time===0 && !isPaused){
-      setIsPaused(true);
-      setCompletedTask(true);
-      addFishObject(usr.id);
-      incrementFish(usr.id);
-      updateHistory(usr.id);
+      completedCycle();
     }
     else if (!isPaused) {
       setTimeout(() => {
@@ -63,6 +61,15 @@ const Timer = () => {
       }, 1000)
     }
   }, [time, isPaused]);
+
+  const completedCycle = () => {
+    setIsPaused(true);
+    setCompletedTask(true);
+    setModalVisible(true)
+    addFishObject(usr.id);
+    incrementFish(usr.id);
+    updateHistory(usr.id);
+  }
 
   function addFishObject(userId){
     let idx = Math.floor(Math.random() * fishArrayLength());
@@ -114,9 +121,16 @@ const Timer = () => {
     return tempMinutes + ":" + tempSeconds;
   }
 
+  const fishFoodCallback = (response) => {
+    return;
+  }
+
   return (
     <View style={styles.timer}>
+
       <Background fishObjects={fishRendered} />
+
+      <UseFishFoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} callback={fishFoodCallback} />
       
       <CountdownCircleTimer
         key={isStopped || time=== 0}
@@ -148,6 +162,7 @@ const Timer = () => {
       </TouchableOpacity>}
 
       {completedTask && <Text>Task complete! You've got a new fish!</Text>}
+
     </View>
   );
 };

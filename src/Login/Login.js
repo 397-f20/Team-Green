@@ -41,7 +41,7 @@ const Login = ({navigation}) => {
                         userData: newUserData,
                         userUid: user.uid
                     })
-                    navigation.navigate('Home', {screen: 'Social'});
+                    navigation.navigate('Home', {screen: 'Timer'});
                 }, function (error){
                     console.log(error.message);
                     setErrorMessage(error.message);
@@ -57,7 +57,7 @@ const Login = ({navigation}) => {
                             userData: snap.val(),
                             userUid: user.uid
                         })
-                        navigation.navigate('Home', {screen: 'Social'});
+                        navigation.navigate('Home', {screen: 'Timer'});
                     } 
                 }, error => alert(error))
             }, function (error){

@@ -43,7 +43,7 @@ const MainNavigator = () => {
 const Home = () => {
   return (      
     <Tab.Navigator
-      initialRouteName="Social"
+      initialRouteName="Timer"
       tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
@@ -68,9 +68,9 @@ const Home = () => {
         },
       })}
     >
-      <Tab.Screen name="Social" component={Social} 
-      />
       <Tab.Screen name="Timer" component={Timer}
+      />
+      <Tab.Screen name="Social" component={Social} 
       />
       <Tab.Screen name="Profile" component={Profile} 
       /> 
