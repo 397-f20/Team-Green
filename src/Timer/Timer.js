@@ -130,7 +130,6 @@ const Timer = () => {
 
       <Background fishObjects={fishRendered} />
 
-      <UseFishFoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} callback={fishFoodCallback} />
       
       <CountdownCircleTimer
         key={isStopped || time=== 0}
@@ -161,7 +160,8 @@ const Timer = () => {
         <Text style={styles.font}>Restart</Text>
       </TouchableOpacity>}
 
-      {completedTask && <Text>Task complete! You've got a new fish!</Text>}
+      {modalVisible && <UseFishFoodModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+}
 
     </View>
   );
@@ -173,6 +173,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  modal:{
+    width: 25, 
+    height: 25
   },
   timerText: {
     fontSize: 60

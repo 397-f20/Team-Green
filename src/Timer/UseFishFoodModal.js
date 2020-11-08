@@ -1,4 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
+import { Text, TouchableHighlight, View, StyleSheet } from 'react-native';
+ 
+import Modal from 'modal-react-native-web';
+ 
+const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
+ 
+    return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onDismiss={() => {
+            alert('Modal has been closed.');
+          }}>
+            <View style={styles.container}>
+              <Text>Task complete! You've got a new fish!</Text>
+ 
+              <TouchableHighlight
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text>Close</Text>
+              </TouchableHighlight>
+            </View>
+        </Modal>
+    );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: "relative", 
+    alignItems: 'center', 
+    alignSelf: 'center', 
+    backgroundColor: 'white',
+    height: 20
+  }
+});
+
+export default UseFishFoodModal;
+
+/*
+  import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 
 // dimensions
@@ -76,3 +119,5 @@ const styles = StyleSheet.create({
 })
 
 export default UseFishFoodModal;
+
+*/
