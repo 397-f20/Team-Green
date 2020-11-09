@@ -66,7 +66,6 @@ const Timer = () => {
     setIsPaused(true);
     setCompletedTask(true);
     setModalVisible(true)
-    addFishObject(usr.id);
     incrementFish(usr.id);
     updateHistory(usr.id);
   }

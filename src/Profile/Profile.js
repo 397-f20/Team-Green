@@ -39,7 +39,7 @@ const Profile = ({navigation}) => {
 
   useEffect(() => {
       if (usr){
-        if (usr.id in user){
+        if (usr.id in user && "history" in user[usr.id]){
           setHistory(user[usr.id].history);
           let max = Object.values(user[usr.id].history).reduce(function (a, b) { return Math.max(a, b); });
           setSegments(max);

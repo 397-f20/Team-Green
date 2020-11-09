@@ -1,83 +1,45 @@
-import React, { useState, useEffect, Component } from 'react';
-import { Text, TouchableOpacity, TouchableHighlight, View, StyleSheet, Dimensions, Animated } from 'react-native';
-
+import React, { useState, useEffect, useContext} from 'react';
+import { Text, TouchableHighlight, View, StyleSheet, Dimensions} from 'react-native';
+import { fishArrayLength } from '../FishTank/FishArray';
+import {firebase} from '../../config/firebase'
+import UserContext from '../UserContext';
 const SCREEN_WIDTH = Dimensions.get('screen').width
 
-import Modal from 'modal-react-native-web';
  
 const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
-  const [animation, setAnimation] = useState(new Animated.Value(0));
-
-  const runOpeningAnimation = () => {
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 400,
-      useNativeDriver: true
-    }).start()
-  }
-
-  const runClosingAnimation = () => {
-    Animated.timing(animation, {
-      toValue: 0,
-      duration: 400,
-      useNativeDriver: true
-    }).start(() => {
-      setModalVisible(false);
-    })
-  }
-
+  const [context, setContext] = useContext(UserContext)
+  const [user, setUser] = useState(context.userData);
+  
   const closeModal = () => {
-    //runClosingAnimation();
     setModalVisible(false);
   }
 
-  const animationStyling = {
-    transform: [
-      { 
-        translateY: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -400]
-        })
-      }
-    ]
+  useEffect(() => {
+    if (modalVisible){
+      addFishObject(user.id);
+    }
+  }, [modalVisible]);
+
+  function addFishObject(userId){
+    let idx = Math.floor(Math.random() * fishArrayLength());
+    let size = Math.floor(Math.random() * 40) + 25;
+    firebase.database().ref('users').child(userId).child('fishObjects').push({idx: idx, size: size});
   }
 
   return (
     <View style={styles.container}>
       <View>
-            <View>
-              <Text>Task complete! You've got a new fish!</Text>
- 
-              <TouchableHighlight
-                onPress={closeModal}>
-                <Text>Close</Text>
-              </TouchableHighlight>
-            </View>
-            </View>
+        <View>
+          <Text>Task complete! You've got a new fish!</Text>
+
+          <TouchableHighlight
+            onPress={closeModal}>
+            <Text>Close</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
     </View>
   )
-    {/*return (
-        <Modal style={styles.modal}
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onDismiss={() => {
-            alert('Modal has been closed.');
-          }}>
-          <View style={styles.container}>
-            <View>
-              <Text>Task complete! You've got a new fish!</Text>
- 
-              <TouchableHighlight
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}>
-                <Text>Close</Text>
-              </TouchableHighlight>
-            </View>
-            </View>
-              </Modal>
-            )*/}
 }
 
 const styles = StyleSheet.create({
@@ -106,85 +68,3 @@ const styles = StyleSheet.create({
 });
 
 export default UseFishFoodModal;
-
-/*
-  import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Animated, Dimensions } from 'react-native';
-
-// dimensions
-const SCREEN_WIDTH = Dimensions.get('screen').width
-
-const UseFishFoodModal = ({ modalVisible, setModalVisible, callback }) => {
-
-  const [animation, setAnimation] = useState(new Animated.Value(0));
-
-  useEffect(() => {
-    if (modalVisible) {
-      runOpeningAnimation();
-    }
-  }, [modalVisible])
-
-  const runOpeningAnimation = () => {
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 400,
-      useNativeDriver: true
-    }).start()
-  }
-
-  const runClosingAnimation = () => {
-    Animated.timing(animation, {
-      toValue: 0,
-      duration: 400,
-      useNativeDriver: true
-    }).start(() => {
-      setModalVisible(false);
-    })
-  }
-
-  const closeModal = () => {
-    runClosingAnimation();
-  }
-
-  const animationStyling = {
-    transform: [
-      { 
-        translateY: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -400]
-        })
-      }
-    ]
-  }
-
-  return (
-    <View style={styles.container}>
-
-      <View style={{...styles.modal, ...animationStyling}}>
-        <TouchableOpacity onPress={closeModal}>
-          <Text>hello!</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-
-}
-
-const styles = StyleSheet.create({
-
-  container: {
-    zIndex: 1000
-  },
-  modal: {
-    position: 'absolute',
-    bottom: 0,
-    backgroundColor: 'white',
-    width: SCREEN_WIDTH,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
-
-export default UseFishFoodModal;
-
-*/
