@@ -1,43 +1,83 @@
 import React, { useState, useEffect, useContext} from 'react';
-import { Text, TouchableHighlight, View, StyleSheet, Dimensions} from 'react-native';
-import { fishArrayLength } from '../FishTank/FishArray';
+import { Text, Image, TouchableOpacity, TouchableHighlight, View, StyleSheet, Dimensions} from 'react-native';
+import { fishArray, fishArrayLength } from '../FishTank/FishArray';
 import {firebase} from '../../config/firebase'
 import UserContext from '../UserContext';
+import { set } from 'react-native-reanimated';
 const SCREEN_WIDTH = Dimensions.get('screen').width
 
  
 const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
   const [context, setContext] = useContext(UserContext)
   const [user, setUser] = useState(context.userData);
+
+  const [fishIdx, setFishIdx] = useState(0);
+  const [fishSize, setFishSize] = useState(0);
+  const [renderFish, setRenderFish] = useState(false);
+  const [isResized, setIsResized] = useState(false);
+
   
   const closeModal = () => {
     setModalVisible(false);
+    updateFishObjects();
   }
 
   useEffect(() => {
     if (modalVisible){
-      addFishObject(user.id);
+      addFishObject();
     }
   }, [modalVisible]);
 
-  function addFishObject(userId){
+  function incrementFish() {
+    firebase.database().ref('users').child(user.id).child('fish').set(user.fish + 1);
+  }
+
+  function addFishObject(){
     let idx = Math.floor(Math.random() * fishArrayLength());
     let size = Math.floor(Math.random() * 40) + 25;
-    firebase.database().ref('users').child(userId).child('fishObjects').push({idx: idx, size: size});
+    setFishIdx(idx);
+    setFishSize(size);
+    setRenderFish(true);
+  }
+
+  function updateFishObjects(){
+    incrementFish();
+    firebase.database().ref('users').child(user.id).child('fishObjects').push({idx: fishIdx, size: fishSize});
+  }
+
+  function resizeFish(){
+    if (!isResized){
+      let size = fishSize * 3;
+      setFishSize(size);
+      setIsResized(true);
+    }
   }
 
   return (
     <View style={styles.container}>
-      <View>
-        <View>
-          <Text>Task complete! You've got a new fish!</Text>
-
+          <Text>Congrats! You received a new fish.</Text>
+          {renderFish && <Image source={fishArray[fishIdx].name} style={{width: fishSize, height: fishSize * fishArray[fishIdx].ratio, marginVertical: 25}} />}
+          {"gifts" in user && Object.keys(user.gifts).length > 0 &&  
+            <React.Fragment>
+            {!isResized && <React.Fragment>
+              <Text>You have been gifted fish food by a friend! Feed it to your fish?</Text>
+            <View style={{flexDirection: 'row', alignSelf: 'stretch', marginTop: 10, justifyContent: 'space-around', alignItems: 'center'}}>
+            <TouchableOpacity onPress={resizeFish}>
+              <View style={styles.button}>
+                <Text style={{paddingHorizontal: 20, paddingVertical: 10}}>Yes!</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={closeModal}>
+              <View style={styles.button}>
+                <Text style={{paddingHorizontal: 20, paddingVertical: 10}}>No</Text>
+              </View>
+            </TouchableOpacity> 
+            </View> </React.Fragment>} 
+            </React.Fragment>}
           <TouchableHighlight
             onPress={closeModal}>
-            <Text>Close</Text>
+            <Text style={{marginTop: 20}}>Close</Text>
           </TouchableHighlight>
-        </View>
-      </View>
     </View>
   )
 }
@@ -64,6 +104,9 @@ const styles = StyleSheet.create({
   },
   text:{
     padding: 10
+  }, 
+  button: {
+    backgroundColor: 'rgba(0, 164, 228, 1)',
   } 
 });
 

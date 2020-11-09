@@ -66,18 +66,7 @@ const Timer = () => {
     setIsPaused(true);
     setCompletedTask(true);
     setModalVisible(true)
-    incrementFish(usr.id);
     updateHistory(usr.id);
-  }
-
-  function addFishObject(userId){
-    let idx = Math.floor(Math.random() * fishArrayLength());
-    let size = Math.floor(Math.random() * 40) + 25;
-    firebase.database().ref('users').child(userId).child('fishObjects').push({idx: idx, size: size});
-  }
-
-  function incrementFish(userId) {
-    firebase.database().ref('users').child(userId).child('fish').set(usr.fish +1);
   }
 
   function updateHistory(userId) {

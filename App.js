@@ -72,8 +72,7 @@ const Home = () => {
       />
       <Tab.Screen name="Social" component={Social} 
       />
-      <Tab.Screen name="Profile" component={Profile} 
-      /> 
+      {/*<Tab.Screen name="Profile" component={Profile} />*/} 
     </Tab.Navigator>
   );
 }
