@@ -21,6 +21,9 @@ const Social = () => {
       if (snap.val()) {
         const data = snap.val()
         setUsersData(data);
+        if ("id" in displayedUser){
+          setFishRendered(data[displayedUser.id].fishObjects);
+        }
       }
     }, error => console.log(error));
   }, []);

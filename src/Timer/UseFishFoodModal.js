@@ -16,6 +16,17 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
   const [renderFish, setRenderFish] = useState(false);
   const [isResized, setIsResized] = useState(false);
 
+  useEffect(()=>{
+    const db = firebase.database().ref('users').child(context.userData.id);
+    db.on('value', snap => {
+        if (snap.val()) {
+            setContext({
+                userData: snap.val(),
+                userUid: context.userData.id
+            })
+        } 
+    }, error => alert(error))
+  }, []);
   
   const closeModal = () => {
     setModalVisible(false);
