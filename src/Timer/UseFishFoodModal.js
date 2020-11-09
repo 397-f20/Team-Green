@@ -1,11 +1,62 @@
-import React, { Component } from 'react';
-import { Text, TouchableHighlight, View, StyleSheet } from 'react-native';
- 
+import React, { useState, useEffect, Component } from 'react';
+import { Text, TouchableOpacity, TouchableHighlight, View, StyleSheet, Dimensions, Animated } from 'react-native';
+
+const SCREEN_WIDTH = Dimensions.get('screen').width
+
 import Modal from 'modal-react-native-web';
  
 const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
+  const [animation, setAnimation] = useState(new Animated.Value(0));
+
+  const runOpeningAnimation = () => {
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true
+    }).start()
+  }
+
+  const runClosingAnimation = () => {
+    Animated.timing(animation, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true
+    }).start(() => {
+      setModalVisible(false);
+    })
+  }
+
+  const closeModal = () => {
+    //runClosingAnimation();
+    setModalVisible(false);
+  }
+
+  const animationStyling = {
+    transform: [
+      { 
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -400]
+        })
+      }
+    ]
+  }
+
+  return (
+    <View style={styles.container}>
+      <View>
+            <View>
+              <Text>Task complete! You've got a new fish!</Text>
  
-    return (
+              <TouchableHighlight
+                onPress={closeModal}>
+                <Text>Close</Text>
+              </TouchableHighlight>
+            </View>
+            </View>
+    </View>
+  )
+    {/*return (
         <Modal style={styles.modal}
           animationType="slide"
           transparent={true}
@@ -25,18 +76,20 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
               </TouchableHighlight>
             </View>
             </View>
-        </Modal>
-    );
+              </Modal>
+            )*/}
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 150, 
-    position: "relative", 
+    marginTop: 50,
+    position: "absolute", 
     alignItems: 'center', 
     alignSelf: 'center', 
     backgroundColor: 'white',
-    height: '25%', 
+    height: '50%', 
+    borderRadius: 25,
+    zIndex: 1000,
     padding: 20
   },
   modal:{
@@ -45,9 +98,11 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center', 
     backgroundColor: 'white',
-    width: '30%',    
-    padding: 20
-  }, 
+    width: SCREEN_WIDTH,    
+  },
+  text:{
+    padding: 10
+  } 
 });
 
 export default UseFishFoodModal;

@@ -53,7 +53,7 @@ const Profile = ({navigation}) => {
     date.setTime(ms);
 
     const month = date.getMonth() + 1;
-    const day = date.getDay();
+    const day = date.getDate();
     return `${month}-${day}`;
   }
 
@@ -67,6 +67,8 @@ const Profile = ({navigation}) => {
     <View style={styles.container}>
       <ProfileHeader title={usr.name} img={usr.img} />
       <ScrollView style={{ alignSelf: "stretch", paddingLeft: 10 }}>
+        {history?
+        <React.Fragment>
         <Text style={{paddingVertical: 10}}>
           Congratulations! You have studied {Object.values(history).length} days in total!
         </Text>
@@ -79,7 +81,9 @@ const Profile = ({navigation}) => {
           chartConfig={chartConfig}
           fromZero={true}
           segments={segments < 10 ? segments : 5}          
-        />       
+        /> </React.Fragment> :
+        <Text> Study! </Text> }
+
         <TouchableOpacity style={{alignSelf: 'stretch', marginHorizontal: 20}} onPress={() => navigation.navigate("Login")}>
           <View style={styles.logout}>
             <Text style={{color: 'white', paddingVertical: 10, fontSize: 18, fontWeight: '500'}}>Log Out</Text>
