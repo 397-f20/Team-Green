@@ -6,14 +6,15 @@ import Modal from 'modal-react-native-web';
 const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
  
     return (
-        <Modal
+        <Modal style={styles.modal}
           animationType="slide"
           transparent={true}
           visible={modalVisible}
           onDismiss={() => {
             alert('Modal has been closed.');
           }}>
-            <View style={styles.container}>
+          <View style={styles.container}>
+            <View>
               <Text>Task complete! You've got a new fish!</Text>
  
               <TouchableHighlight
@@ -23,19 +24,30 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
                 <Text>Close</Text>
               </TouchableHighlight>
             </View>
+            </View>
         </Modal>
     );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginTop: 150, 
     position: "relative", 
     alignItems: 'center', 
     alignSelf: 'center', 
     backgroundColor: 'white',
-    height: 20
-  }
+    height: '25%', 
+    padding: 20
+  },
+  modal:{
+    flex: 0,
+    margin: 0, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: 'white',
+    width: '30%',    
+    padding: 20
+  }, 
 });
 
 export default UseFishFoodModal;
