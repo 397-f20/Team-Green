@@ -7,9 +7,9 @@ import Background from '../FishTank/Background.js';
 import { fishArrayLength } from '../FishTank/FishArray';
 import UserContext from '../UserContext';
 import UseFishFoodModal from './UseFishFoodModal.js';
+import Logout from '../Logout/Logout';
 
 const Timer = () => {
-
   const [context, setContext]= useContext(UserContext);
   const [user, setUser] = useState({});
   const [usr, setUsr] = useState(context.userData);
@@ -116,7 +116,11 @@ const Timer = () => {
   return (
     <View style={styles.timer}>
 
+      
+
       <Background fishObjects={fishRendered} />
+      
+      <Logout/>
 
       
       <CountdownCircleTimer

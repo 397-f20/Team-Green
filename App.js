@@ -14,11 +14,12 @@ import Profile from './src/Profile/Profile.js';
 import Social from './src/Social/Social.js';
 import Timer from './src/Timer/Timer.js';
 import Login from './src/Login/Login';
+import Logout from './src/Logout/Logout';
 
 
 const Stack = createStackNavigator();
 
-const App = () => {
+const App = () => {  
   const [context, setContext] = useState({userData: null, userUID: null});
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS == "ios" ? "padding" : "height"}>
@@ -41,7 +42,7 @@ const MainNavigator = () => {
 }
 
 const Home = () => {
-  return (      
+  return (   
     <Tab.Navigator
       initialRouteName="Timer"
       tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
@@ -67,13 +68,13 @@ const Home = () => {
           return iconName;
         },
       })}
-    >
+    >      
       <Tab.Screen name="Timer" component={Timer}
       />
       <Tab.Screen name="Social" component={Social} 
       />
       {/*<Tab.Screen name="Profile" component={Profile} />*/} 
-    </Tab.Navigator>
+    </Tab.Navigator> 
   );
 }
 
