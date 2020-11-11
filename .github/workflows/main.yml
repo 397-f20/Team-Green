@@ -1,0 +1,26 @@
+name: Expo CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+      - run: yarn install
+      - run: yarn test
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: expo build:web
+          start: expo start -w
+          wait-on: http://localhost:19006
