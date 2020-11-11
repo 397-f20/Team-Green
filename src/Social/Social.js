@@ -8,6 +8,7 @@ import UserContext from '../UserContext';
 import Background from '../FishTank/Background.js';
 import Dropdown from './Dropdown.js';
 import SendFishFood from './SendFishFood.js';
+import Logout from '../Logout/Logout';
 
 const Social = () => {
   const [context, setContext] = useContext(UserContext);
@@ -59,8 +60,9 @@ const Social = () => {
   }, [displayedUser, usersData])
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}>      
       <Background fishObjects={fishRendered} />
+      <Logout style={styles.logout}/>
       <Dropdown userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} />
       <SendFishFood callback={sendFishFoodCallback} />
     </View>
@@ -70,7 +72,7 @@ const Social = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  }
+  }  
 });
 
 export default Social;

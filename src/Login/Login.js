@@ -7,7 +7,8 @@ import { Validation } from './Validation';
 import Background from '../FishTank/Background.js';
 import UserContext from '../UserContext';
 
-const Login = ({navigation}) => {
+const Login = ({navigation}) => {    
+    
     const [context, setContext] = useContext(UserContext);
 
     const [titleAnimated, setTitleAnimated] = useState(new Animated.Value(0));
@@ -19,6 +20,7 @@ const Login = ({navigation}) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
+        checkUserSession();
         runTitleAnimation();
     }, [])
 
@@ -48,8 +50,38 @@ const Login = ({navigation}) => {
                 })
             }
         } else {
-            firebase.auth().signInWithEmailAndPassword(username, password).then(function(user) {
-                var user = firebase.auth().currentUser;
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL) // persistent login can only be cleared on user sign out
+                .then(function() {                
+                    firebase.auth().signInWithEmailAndPassword(username, password)
+                        .then(function(user) {
+                            const currentUser = firebase.auth().currentUser;
+                            const db = firebase.database().ref('users').child(currentUser.uid);
+                            db.on('value', snap => {
+                                if (snap.val()) {
+                                    setContext({
+                                        userData: snap.val(),
+                                        userUid: currentUser.uid
+                                    })
+                                    navigation.navigate('Home', {screen: 'Timer'});
+                                } 
+                            }, error => alert(error))
+                    }, function (error){
+                        console.log(error.message);
+                        setErrorMessage(error.message);
+                    })
+            })
+            .catch(function(error) {
+                console.log(error.message);
+                setErrorMessage(error.message);
+            })
+        }    
+    }
+
+    // Checks if there is an existing user session
+    // If so, sets the user context and then navigates to home stack
+    const checkUserSession = () => {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {                
                 const db = firebase.database().ref('users').child(user.uid);
                 db.on('value', snap => {
                     if (snap.val()) {
@@ -60,11 +92,8 @@ const Login = ({navigation}) => {
                         navigation.navigate('Home', {screen: 'Timer'});
                     } 
                 }, error => alert(error))
-            }, function (error){
-                console.log(error.message);
-                setErrorMessage(error.message);
-            })
-        }    
+            }        
+        })
     }
 
     const animationDuration = 10000;
