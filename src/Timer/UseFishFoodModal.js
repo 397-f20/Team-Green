@@ -68,23 +68,25 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
     <View style={styles.container}>
           <Text>Congrats! You received a new fish.</Text>
           {renderFish && <Image source={fishArray[fishIdx].name} style={{width: fishSize, height: fishSize * fishArray[fishIdx].ratio, marginVertical: 25}} />}
-          {"gifts" in user && Object.keys(user.gifts).length > 0 &&  
+          {"gifts" in user && Object.keys(user.gifts).length > 0 ?  
             <React.Fragment>
-            {!isResized && <React.Fragment>
-              <Text>You have been gifted fish food by a friend! Feed it to your fish?</Text>
-            <View style={{flexDirection: 'row', alignSelf: 'stretch', marginTop: 10, justifyContent: 'space-around', alignItems: 'center'}}>
-            <TouchableOpacity onPress={resizeFish}>
-              <View style={styles.button}>
-                <Text style={{paddingHorizontal: 20, paddingVertical: 10}}>Yes!</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={closeModal}>
-              <View style={styles.button}>
-                <Text style={{paddingHorizontal: 20, paddingVertical: 10}}>No</Text>
-              </View>
-            </TouchableOpacity> 
-            </View> </React.Fragment>} 
-            </React.Fragment>}
+              {!isResized && 
+              <React.Fragment>
+                <Text>You have been gifted fish food by a friend! Feed it to your fish?</Text>
+                <View style={{flexDirection: 'row', alignSelf: 'stretch', marginTop: 10, justifyContent: 'space-around', alignItems: 'center'}}>
+                  <TouchableOpacity onPress={resizeFish}>
+                    <View style={styles.button}>
+                        <Text style={{paddingHorizontal: 20, paddingVertical: 10}}>Yes!</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={closeModal}>
+                      <View style={styles.button}>
+                        <Text style={{paddingHorizontal: 20, paddingVertical: 10}}>No</Text>
+                      </View>
+                  </TouchableOpacity> 
+                </View> 
+              </React.Fragment>} 
+            </React.Fragment> : null}
           <TouchableHighlight
             onPress={closeModal}>
             <Text style={{marginTop: 20}}>Close</Text>
