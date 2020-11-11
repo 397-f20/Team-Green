@@ -67,22 +67,23 @@ const Profile = ({navigation}) => {
     <View style={styles.container}>
       <ProfileHeader title={usr.name} img={usr.img} />
       <ScrollView style={{ alignSelf: "stretch", paddingLeft: 10 }}>
-        {history?
+        {history ?
         <React.Fragment>
-        <Text style={{paddingVertical: 10}}>
-          Congratulations! You have studied {Object.values(history).length} days in total!
-        </Text>
-        <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
-        <LineChart
-          style={styles.graphStyle}
-          data={constructData(history)}
-          width={screenWidth * 0.9}
-          height={220}
-          chartConfig={chartConfig}
-          fromZero={true}
-          segments={segments < 10 ? segments : 5}          
-        /> </React.Fragment> :
-        <Text> Study! </Text> }
+          <Text style={{paddingVertical: 10}}>
+            Congratulations! You have studied {Object.values(history).length} days in total!
+          </Text>
+          <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
+          <LineChart
+            style={styles.graphStyle}
+            data={constructData(history)}
+            width={screenWidth * 0.9}
+            height={220}
+            chartConfig={chartConfig}
+            fromZero={true}
+            segments={segments < 10 ? segments : 5}          
+          /> 
+        </React.Fragment> :
+        null}
 
         <TouchableOpacity style={{alignSelf: 'stretch', marginHorizontal: 20}} onPress={() => navigation.navigate("Login")}>
           <View style={styles.logout}>
