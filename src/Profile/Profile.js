@@ -49,7 +49,7 @@ const Profile = ({navigation}) => {
 
   // Formats date as month-day
   function getDate (ms) {
-    const date = new Date();
+    const date = new Date;
     date.setTime(ms);
 
     const month = date.getMonth() + 1;
@@ -60,6 +60,9 @@ const Profile = ({navigation}) => {
   function constructData(history) {
     let labels = Object.keys(history).map(e => getDate(e));
     let dataPoints = Object.values(history);
+    console.log("construct data")
+    console.log(labels)
+    console.log(dataPoints)
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
   usr.img = require('../../assets/profiles/shaggy.jpg') ////////////////////////eventually get images from server
@@ -67,7 +70,7 @@ const Profile = ({navigation}) => {
     <View style={styles.container}>
       <ProfileHeader title={usr.name} img={usr.img} />
       <ScrollView style={{ alignSelf: "stretch", paddingLeft: 10 }}>
-        {history ?
+        {Object.keys(history).length > 0 ?
         <React.Fragment>
           <Text style={{paddingVertical: 10}}>
             Congratulations! You have studied {Object.values(history).length} days in total!

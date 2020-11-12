@@ -30,11 +30,18 @@ const Login = ({navigation}) => {
             if (validated) {
                 firebase.auth().createUserWithEmailAndPassword(username, password).then(function (user) {
                     var user = firebase.auth().currentUser;
+                    const now = new Date(Date.now());
+                    const year = now.getUTCFullYear();
+                    const month = now.getUTCMonth();
+                    const day = now.getUTCDate();
+                    const today = new Date(Date.UTC(year, month, day));
+                    const key = today.valueOf();
+
                     const newUserData = {
                         fish: 0,
                         fishObjects: {},
                         friends: {},
-                        history: [],
+                        history: {[key] : 0},
                         id: user.uid,
                         name: displayName
                     }
