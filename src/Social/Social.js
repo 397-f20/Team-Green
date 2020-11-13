@@ -71,14 +71,16 @@ const Social = () => {
   return (
     <View style={styles.container}>      
       <Background fishObjects={fishRendered} />
-      <Logout style={styles.logout}/>
-      {/* <Button title="Add Friend" onPress={showAddFriend} /> */}
+
+      <Dropdown style={styles.dropdown} userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} friendsList={context.userData.friends} />
+
       <AddFriendButton addFriend={showAddFriend} />
+      <Logout style={styles.logout}/>
 
       {modalVisible && <NewFriendModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
 }
 
-      <Dropdown userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} />
+
       <SendFishFood callback={sendFishFoodCallback} />
     </View>
   );
@@ -91,6 +93,9 @@ const styles = StyleSheet.create({
   modal:{
     width: 25, 
     height: 25
+  },
+  dropdown: {
+    top: 500
   }
 });
 

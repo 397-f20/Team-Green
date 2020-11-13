@@ -1,12 +1,10 @@
 /*
-    Logout Button Component
+    Add Friend Button Component
 
     **Note**
     This button is currently fixed on each tab screen so that it's accessible.
     This design is temporary and can be changed for the screens. 
 */
-
-
 
 import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';

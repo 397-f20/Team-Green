@@ -33,7 +33,7 @@ const Login = ({navigation}) => {
                     const newUserData = {
                         fish: 0,
                         fishObjects: {},
-                        friends: [user.uid],
+                        friends: [{friendUID: user.uid, friendName: displayName, friendEmail: username}],
                         history: [],
                         id: user.uid,
                         name: displayName,

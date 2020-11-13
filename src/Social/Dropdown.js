@@ -3,7 +3,17 @@ import { View, TouchableOpacity, Text, StyleSheet, Dimensions, ScrollView } from
 
 const Dropdown = (props) => {
 
-  const [showDropdown, setShowDropdown] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false);
+  var userFriendList = [];
+  for (var friend in props.friendsList) {
+    userFriendList.push(props.friendsList[friend].friendUID);
+  }
+  var friendsListRender = {}
+  for (var userUID in props.userData) {
+    if (userFriendList.includes(userUID)) {
+      friendsListRender[userUID] = (props.userData[userUID]);
+    }
+  }
 
   const changeUser = (user) => {
     setShowDropdown(false);
@@ -12,11 +22,9 @@ const Dropdown = (props) => {
 
   return (
     <View >
-      <TouchableOpacity activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
-        <View style={styles.currentSelection}>
-          <Text style={styles.currentSelectionText}>{props.selectedUser} {props.selectedUser === props.loggedIn ? "(You)" : ""}</Text>
-          <Text style={styles.currentSelectionTextCarat}>&#8964;</Text>
-        </View>
+      <TouchableOpacity style={styles.currentSelection} activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
+        <Text style={styles.currentSelectionText}>{props.selectedUser} {props.selectedUser === props.loggedIn ? "(You)" : ""}</Text>
+        <Text style={styles.currentSelectionTextCarat}>&#8964;</Text>
       </TouchableOpacity>
 
       {showDropdown &&
@@ -24,8 +32,8 @@ const Dropdown = (props) => {
           contentContainerStyle={styles.scrollView}
         >
           {
-            Object.keys(props.userData).map((user, index) => (
-              <SingleOption user={props.userData[user]} key={index} changeUser={() => changeUser(user)} loggedIn={props.loggedIn} />
+            Object.keys(friendsListRender).map((user, index) => (
+              <SingleOption user={friendsListRender[user]} key={index} changeUser={() => changeUser(user)} loggedIn={props.loggedIn} />
             ))
           }
         </ScrollView>}
@@ -64,7 +72,7 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     borderRadius: 25,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   currentSelectionText: {
     paddingHorizontal: 20,
