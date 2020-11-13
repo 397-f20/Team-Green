@@ -36,7 +36,6 @@
     "expo-linear-gradient": "~8.3.0",
     "expo-status-bar": "~1.0.2",
     "firebase": "7.9.0",
-    "firebase-admin": "^9.4.0",
     "jest-expo": "^39.0.0",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
