@@ -37,4 +37,22 @@ describe('Profile', () => {
       expect(graphDisplayed).toBeTruthy();
     }
   })
+
+  it('should show total fish in tank', () => {
+    async () => {
+      const userData = {
+        id: "a",
+        fish: 10, 
+        history: {"1604880000000": 4, "1605052800000": 2},
+        name: "Claire"
+      }
+      const profile = render(<UserSummary userData={userData} />);
+      const fishTotal = profile.queryByText('Total Fish: 10');
+      expect(fishTotal).toBeTruthy();
+
+      const history = profile.queryByText('Congratulations! You have studied 2 days in total!')
+      expect(history.toBeTruthy());
+      
+    }
+  })
 });
