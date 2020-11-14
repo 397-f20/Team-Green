@@ -5,6 +5,7 @@ import { Dimensions } from "react-native";
 import { BarChart, LineChart } from "react-native-chart-kit";
 import ProfileHeader from "./ProfileHeader"
 import UserContext from '../UserContext';
+import UserSummary from './UserSummary';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -67,9 +68,7 @@ const Profile = ({navigation}) => {
     <View style={styles.container}>
       <ProfileHeader title={usr.name} img={usr.img} />
       <ScrollView style={{ alignSelf: "stretch", paddingLeft: 10 }}>
-        <Text style={{paddingVertical: 10}}>
-          Congratulations! You have studied {Object.values(history).length} days in total!
-        </Text>
+        <UserSummary userData={usr} />
         <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
         <LineChart
           style={styles.graphStyle}
