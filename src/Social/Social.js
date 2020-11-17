@@ -1,8 +1,7 @@
 // package dependencies
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, StyleSheet} from 'react-native';
 import { firebase } from '../../config/firebase'
-import UserContext from '../UserContext';
 import 'firebase/auth';
 
 // components
@@ -13,39 +12,22 @@ import NewFriendModal from './NewFriendModal';
 import AddFriendButton from './AddFriendButton';
 import Dropdown from './Dropdown.js';
 
+import { useUserContext } from '../UserContext';
 
 const Social = () => {
-  const [context, setContext] = useContext(UserContext);
-  const [usersData, setUsersData] = useState({});
-  const [displayedUser, setDisplayedUser] = useState({});
-  const [fishRendered, setFishRendered] = useState({});
+
+  const { userData } = useUserContext();
+  const [displayedUser, setDisplayedUser] = useState(userData);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const db = firebase.database().ref('users');
-    db.on('value', snap => {
+  // user = {id}
+  const changeUser = (uid) => {
+    // change displayed user --> uid -> call to firebase -- > set displayed user from firebase response
+    firebase.database().ref('users/' + uid).on('value', snap => {
       if (snap.val()) {
-        const data = snap.val()
-        setUsersData(data);
-        if ("id" in displayedUser){
-          setFishRendered(data[displayedUser.id].fishObjects);
-        }
+        setDisplayedUser(snap.val());
       }
-    }, error => console.log(error));
-  }, []);
-
-  useEffect(() => {
-    setDisplayedUser(context.userData);
-    setFishRendered(context.userData.fishObjects);
-  }, [])
-
-  const changeUser = (user) => {
-    if (user){
-      if (user in usersData){
-        setDisplayedUser(usersData[user]);
-        setFishRendered(usersData[user].fishObjects);
-      }
-    }
+    });
   }
 
   const showAddFriend = () => {
@@ -53,7 +35,7 @@ const Social = () => {
   }
 
   const sendFishFoodCallback = useCallback(() => {
-    if (displayedUser.id === context.userData.id) {
+    if (displayedUser.id === userData.id) {
       alert("you can't send food to yourself!")
       return;
     }
@@ -62,18 +44,18 @@ const Social = () => {
     // check the timeout : has it been 24 hours ? send the food, update timeout : don't send the food, alert the user
 
     firebase.database().ref('users').child(displayedUser.id).child('gifts').push({
-      sender: context.userData.name
+      sender: userData.name
     })
     alert('fish food is sent!');
     return;
-  }, [displayedUser, usersData])
+  }, [displayedUser, userData])
 
   return (
     <View style={styles.container}>      
-      <Background fishObjects={fishRendered} />
+      <Background fishObjects={displayedUser.fishObjects} />
 
-      <Dropdown style={styles.dropdown} userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} friendsList={context.userData.friends} />
-
+      <Dropdown friendsList={userData.friends} loggedIn={userData.id} changeUser={changeUser} currentlySelected={displayedUser} />
+      
       <AddFriendButton addFriend={showAddFriend} />
       <Logout style={styles.logout}/>
 

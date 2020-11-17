@@ -1,29 +1,19 @@
 import React, {useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 
-const Dropdown = (props) => {
+const Dropdown = ({ friendsList, loggedIn, changeUser, currentlySelected }) => {
 
   const [showDropdown, setShowDropdown] = useState(false);
-  var userFriendList = [];
-  for (var friend in props.friendsList) {
-    userFriendList.push(props.friendsList[friend].friendUID);
-  }
-  var friendsListRender = {}
-  for (var userUID in props.userData) {
-    if (userFriendList.includes(userUID)) {
-      friendsListRender[userUID] = (props.userData[userUID]);
-    }
-  }
 
-  const changeUser = (user) => {
+  const internalChangeUser = (uid) => {
     setShowDropdown(false);
-    props.changeUser(user);
+    changeUser(uid);
   }
 
   return (
     <View >
       <TouchableOpacity style={styles.currentSelection} activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
-        <Text style={styles.currentSelectionText}>{props.selectedUser} {props.selectedUser === props.loggedIn ? "(You)" : ""}</Text>
+        <Text style={styles.currentSelectionText}>{currentlySelected.name} {currentlySelected.id === loggedIn ? "(You)" : ""}</Text>
         <Text style={styles.currentSelectionTextCarat}>&#8964;</Text>
       </TouchableOpacity>
 
@@ -32,8 +22,8 @@ const Dropdown = (props) => {
           contentContainerStyle={styles.scrollView}
         >
           {
-            Object.keys(friendsListRender).map((user, index) => (
-              <SingleOption user={friendsListRender[user]} key={index} changeUser={() => changeUser(user)} loggedIn={props.loggedIn} />
+            Object.values(friendsList).map((friend) => (
+              <SingleOption user={friend} key={friend.friendUID} changeUser={internalChangeUser} loggedIn={loggedIn} />
             ))
           }
         </ScrollView>}
@@ -41,11 +31,11 @@ const Dropdown = (props) => {
   )
 }
 
-const SingleOption = (props) => {
+const SingleOption = ({ user, changeUser, loggedIn }) => {
   return (
-    <TouchableOpacity onPress={props.changeUser}>
+    <TouchableOpacity onPress={() => changeUser(user.friendUID)}>
       <View style={styles.singleOption}>
-        <Text>{props.user.name} {props.user.name === props.loggedIn ? "(You)" : ""}</Text>
+        <Text>{user.friendName} {user.friendUID === loggedIn ? "(You)" : ""}</Text>
       </View>
     </TouchableOpacity>
   )

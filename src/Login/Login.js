@@ -1,16 +1,16 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
 import { firebase } from '../../config/firebase'
 import 'firebase/auth';
 import { Validation } from './Validation';
 
 import Background from '../FishTank/Background.js';
-import UserContext from '../UserContext';
+import { useUserContext } from '../UserContext';
 
-const Login = ({navigation}) => {    
+const Login = ({navigation}) => {   
     
-    const [context, setContext] = useContext(UserContext);
-
+    const { userUidCallback } = useUserContext();
+    
     const [titleAnimated, setTitleAnimated] = useState(new Animated.Value(0));
     const [displayName, setDisplayName] = useState('');
     const [username, setUsername] = useState('');
@@ -47,10 +47,7 @@ const Login = ({navigation}) => {
                         email: username
                     }
                     firebase.database().ref('users/' + user.uid).set(newUserData);
-                    setContext({
-                        userData: newUserData,
-                        userUid: user.uid
-                    })
+                    userUidCallback(newUserData.id);
                     navigation.navigate('Home', {screen: 'Timer'});
                 }, function (error){
                     console.log(error.message);
@@ -63,16 +60,15 @@ const Login = ({navigation}) => {
                     firebase.auth().signInWithEmailAndPassword(username, password)
                         .then(function(user) {
                             const currentUser = firebase.auth().currentUser;
-                            const db = firebase.database().ref('users').child(currentUser.uid);
-                            db.on('value', snap => {
-                                if (snap.val()) {
-                                    setContext({
-                                        userData: snap.val(),
-                                        userUid: currentUser.uid
-                                    })
-                                    navigation.navigate('Home', {screen: 'Timer'});
-                                } 
-                            }, error => alert(error))
+                            userUidCallback(currentUser.uid)
+                            navigation.navigate('Home', {screen: 'Timer'});
+                            // const db = firebase.database().ref('users').child(currentUser.uid);
+                            // db.on('value', snap => {
+                            //     if (snap.val()) {
+                            //         userUidCallback(currenUser.id);
+                            //         navigation.navigate('Home', {screen: 'Timer'});
+                            //     } 
+                            // }, error => alert(error))
                     }, function (error){
                         console.log(error.message);
                         setErrorMessage(error.message);
@@ -90,16 +86,15 @@ const Login = ({navigation}) => {
     const checkUserSession = () => {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {                
-                const db = firebase.database().ref('users').child(user.uid);
-                db.on('value', snap => {
-                    if (snap.val()) {
-                        setContext({
-                            userData: snap.val(),
-                            userUid: user.uid
-                        })
-                        navigation.navigate('Home', {screen: 'Timer'});
-                    } 
-                }, error => alert(error))
+                // const db = firebase.database().ref('users').child(user.uid);
+                userUidCallback(user.uid)
+                navigation.navigate('Home', {screen: 'Timer'});
+                // db.on('value', snap => {
+                //     if (snap.val()) {
+                //         userUidCallback(snapid);
+                //         navigation.navigate('Home', {screen: 'Timer'});
+                //     } 
+                // }, error => alert(error))
             }        
         })
     }

@@ -1,32 +1,18 @@
-import React, { useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect} from 'react';
 import { Text, Image, TouchableOpacity, TouchableHighlight, View, StyleSheet, Dimensions} from 'react-native';
 import { fishArray, fishArrayLength } from '../FishTank/FishArray';
 import {firebase} from '../../config/firebase'
-import UserContext from '../UserContext';
-import { set } from 'react-native-reanimated';
 const SCREEN_WIDTH = Dimensions.get('screen').width
 
+import { useUserContext } from '../UserContext';
  
 const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
-  const [context, setContext] = useContext(UserContext)
-  const [user, setUser] = useState(context.userData);
-
+  const { userData } = useUserContext();
+  
   const [fishIdx, setFishIdx] = useState(0);
   const [fishSize, setFishSize] = useState(0);
   const [renderFish, setRenderFish] = useState(false);
   const [isResized, setIsResized] = useState(false);
-
-  useEffect(()=>{
-    const db = firebase.database().ref('users').child(context.userData.id);
-    db.on('value', snap => {
-        if (snap.val()) {
-            setContext({
-                userData: snap.val(),
-                userUid: context.userData.id
-            })
-        } 
-    }, error => alert(error))
-  }, []);
   
   const closeModal = () => {
     setModalVisible(false);
@@ -40,7 +26,7 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
   }, [modalVisible]);
 
   function incrementFish() {
-    firebase.database().ref('users').child(user.id).child('fish').set(user.fish + 1);
+    firebase.database().ref('users').child(userData.id).child('fish').set(userData.fish + 1);
   }
 
   function addFishObject(){
@@ -53,7 +39,7 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
 
   function updateFishObjects(){
     incrementFish();
-    firebase.database().ref('users').child(user.id).child('fishObjects').push({idx: fishIdx, size: fishSize});
+    firebase.database().ref('users').child(userData.id).child('fishObjects').push({idx: fishIdx, size: fishSize});
   }
 
   function resizeFish(){
@@ -68,7 +54,7 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
     <View style={styles.container}>
           <Text>Congrats! You received a new fish.</Text>
           {renderFish && <Image source={fishArray[fishIdx].name} style={{width: fishSize, height: fishSize * fishArray[fishIdx].ratio, marginVertical: 25}} />}
-          {"gifts" in user && Object.keys(user.gifts).length > 0 ?  
+          {"gifts" in userData && Object.keys(userData.gifts).length > 0 ?  
             <React.Fragment>
               {!isResized && 
               <React.Fragment>

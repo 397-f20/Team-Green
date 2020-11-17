@@ -4,51 +4,22 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {firebase} from '../../config/firebase'
 
 import Background from '../FishTank/Background.js';
-import { fishArrayLength } from '../FishTank/FishArray';
-import UserContext from '../UserContext';
 import UseFishFoodModal from './UseFishFoodModal.js';
 import Logout from '../Logout/Logout';
 
+import { useUserContext } from '../UserContext';
+
 const Timer = () => {
-  const [context, setContext]= useContext(UserContext);
-  const [user, setUser] = useState({});
-  const [usr, setUsr] = useState(context.userData);
+  const { userData } = useUserContext();
 
   const [time, setTime] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
   const [completedTask, setCompletedTask] = useState(false);
   const [isStopped, setIsStopped] = useState(true);
-  const [fishRendered, setFishRendered] = useState([]);
-  const [history, setHistory] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const timerDuration = 10; 
-
-  useEffect(() => {
-    const db = firebase.database().ref('users');
-    db.on('value', snap => {
-      if (snap.val()) {
-        setUser(snap.val());
-        console.log("death")
-        console.log(usr)
-        if (usr.id in snap.val()){
-          setHistory(snap.val()[usr.id].history);
-        }
-        if (usr){
-          setFishRendered(snap.val()[usr.id].fishObjects);
-        }
-      }
-    }, error => console.log(error));
-  }, []);
-
-  // const usr = user.a;
-  /*useEffect(()=>{
-    if ("a" in user) {
-      setUsr(user.a);
-    }
-  }, [user])
-  */
 
   useEffect(() => {  
     if (time===0 && !isPaused){
@@ -66,18 +37,18 @@ const Timer = () => {
     setIsPaused(true);
     setCompletedTask(true);
     setModalVisible(true)
-    updateHistory(usr.id);
+    localUpdateHistory(userData.id);
   }
 
-  function updateHistory(userId) {
+  function localUpdateHistory(userId) {
     const now = new Date(Date.now());
     const year = now.getUTCFullYear();
     const month = now.getUTCMonth();
     const day = now.getUTCDate();
     const today = new Date(Date.UTC(year, month, day));
     const key = today.valueOf();
-    if (history && history[key]){
-      firebase.database().ref('users').child(userId).child('history').child(key).set( history[key] + 1);
+    if (userData.history && userData.history[key]){
+      firebase.database().ref('users').child(userId).child('history').child(key).set( userData.history[key] + 1);
     }
     else{
       firebase.database().ref('users').child(userId).child('history').child(key).set(1);
@@ -109,20 +80,10 @@ const Timer = () => {
     return tempMinutes + ":" + tempSeconds;
   }
 
-  const fishFoodCallback = (response) => {
-    return;
-  }
-
   return (
     <View style={styles.timer}>
-
-      
-
-      <Background fishObjects={fishRendered} />
-      
+      <Background fishObjects={userData.fishObjects} /> 
       <Logout/>
-
-      
       <CountdownCircleTimer
         key={isStopped || time=== 0}
         isPlaying={!isPaused}

@@ -1,27 +1,14 @@
-import React, { useState, useEffect, useContext} from 'react';
-import { Text, Image, TouchableOpacity, TouchableHighlight, View, StyleSheet, Dimensions, TextInput} from 'react-native';
-import { fishArray, fishArrayLength } from '../FishTank/FishArray';
+import React, { useState } from 'react';
+import { Text , TouchableOpacity, TouchableHighlight, View, StyleSheet, Dimensions, TextInput } from 'react-native';
 import {firebase} from '../../config/firebase'
-import UserContext from '../UserContext';
-import { set } from 'react-native-reanimated';
 const SCREEN_WIDTH = Dimensions.get('screen').width
 
-const NewFriendModal = ({modalVisible, setModalVisible}) => {
-  const [context, setContext] = useContext(UserContext)
-  const [user, setUser] = useState(context.userData);
-  const [emailInput, setEmailInput] = useState("");
+import { useUserContext } from '../UserContext';
 
-  useEffect(()=>{
-    const db = firebase.database().ref('users').child(context.userData.id);
-    db.on('value', snap => {
-        if (snap.val()) {
-            setContext({
-                userData: snap.val(),
-                userUid: context.userData.id
-            })
-        } 
-    }, error => alert(error))
-  }, []);
+const NewFriendModal = ({setModalVisible}) => {
+  const { userData } = useUserContext();
+
+  const [emailInput, setEmailInput] = useState("");
   
   const closeModal = () => {
     setModalVisible(false);
@@ -29,25 +16,26 @@ const NewFriendModal = ({modalVisible, setModalVisible}) => {
 
   function searchFriend() {
     var usersRef = firebase.database().ref('users');
-    var thisUserRef = firebase.database().ref('users').child(user.id);
-    var friendsEmailList = [];
-    for (var friend in user.friends) {
-      if (friend != '0') {
-        friendsEmailList.push(user.friends[friend].friendEmail);
+    var thisUserRef = firebase.database().ref('users').child(userData.id);
+
+    // check if user already has person as friend
+    for (var friend in userData.friends) {
+      if (userData.friends[friend].friendEmail === emailInput) {
+        alert('You already have this person as a friend!');
+        closeModal();
+        return;
       }
     }
+
+    // if not already friend, add as friend
     usersRef.once("value", function(snapshot) {
       snapshot.forEach(function(child) {
-        if (child.val().email && emailInput == child.val().email 
-            && !friendsEmailList.includes(emailInput)
-            && emailInput != user.email) {
-          var friendUID = child.val().id;
-          var friendName = child.val().name;
-          var friendEmail = child.val().email;
+        if (child.val().email && emailInput == child.val().email) {
           thisUserRef.child('friends')
-            .push({friendName: friendName, friendUID: friendUID, friendEmail: friendEmail});
+            .push({friendName: child.val().name, friendUID: child.val().id, friendEmail: child.val().email});
           alert("Successfully added friend!");
           closeModal();
+          return;
         }
       });
     });

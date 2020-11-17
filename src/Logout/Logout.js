@@ -8,20 +8,23 @@
 
 
 
-import React, { useContext, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { firebase } from '../../config/firebase'
 import { useNavigation } from '@react-navigation/native';
 import 'firebase/auth';
 
-
+import { useUserContext } from '../UserContext';
 
 const Logout = () => {
+    const { userUidCallback } = useUserContext();
+
     const navigation = useNavigation(); // get navigation object
 
     // Signs user out with firebase
     // Redirects to login page if successful
     const logout = () => {
+        userUidCallback(null);
         firebase.auth().signOut()
             .then(function() {
                 navigation.navigate('Login');

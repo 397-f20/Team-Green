@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { firebase } from '../../config/firebase'
 import { Dimensions } from "react-native";
-import { BarChart, LineChart } from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 import ProfileHeader from "./ProfileHeader"
-import UserContext from '../UserContext';
+import { useUserContext } from '../UserContext';
+import 'firebase/auth';
+import { firebase } from '../../config/firebase'
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -20,32 +21,7 @@ const chartConfig = {
 };
 
 const Profile = ({navigation}) => {
-  const [context, setContext] = useContext(UserContext);
-
-  const [user, setUser] = useState({});
-  const [usr, setUsr] = useState(context.userData);
-
-  const [history, setHistory] = useState({});
-  const [segments, setSegments] = useState(2);
-
-  useEffect(() => {
-    const db = firebase.database().ref('users');
-    db.on('value', snap => {
-      if (snap.val()) {
-        setUser(snap.val());
-      }
-    }, error => console.log(error));
-  }, []);
-
-  useEffect(() => {
-      if (usr){
-        if (usr.id in user && "history" in user[usr.id]){
-          setHistory(user[usr.id].history);
-          let max = Object.values(user[usr.id].history).reduce(function (a, b) { return Math.max(a, b); });
-          setSegments(max);
-        }
-      }
-  }, [user])
+  const { userData, userUidCallback } = useUserContext();
 
   // Formats date as month-day
   function getDate (ms) {
@@ -60,35 +36,47 @@ const Profile = ({navigation}) => {
   function constructData(history) {
     let labels = Object.keys(history).map(e => getDate(e));
     let dataPoints = Object.values(history);
-    console.log("construct data")
-    console.log(labels)
-    console.log(dataPoints)
+    // console.log("construct data")
+    // console.log(labels)
+    // console.log(dataPoints)
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
-  usr.img = require('../../assets/profiles/shaggy.jpg') ////////////////////////eventually get images from server
+
+  const logoutCallback = () => {
+    firebase.auth().signOut()
+    .then(function() {
+        navigation.navigate('Login');
+        userUidCallback(null);
+    })
+    .catch(function(err) {
+        alert(err.message);
+    })
+    return;
+  }
+
   return (
     <View style={styles.container}>
-      <ProfileHeader title={usr.name} img={usr.img} />
+      <ProfileHeader title={userData.name} img={require('../../assets/profiles/shaggy.jpg')} />
       <ScrollView style={{ alignSelf: "stretch", paddingLeft: 10 }}>
-        {Object.keys(history).length > 0 ?
+        {Object.keys(userData.history).length > 0 ?
         <React.Fragment>
           <Text style={{paddingVertical: 10}}>
-            Congratulations! You have studied {Object.values(history).length} days in total!
+            Congratulations! You have studied {Object.values(userData.history).length} days in total!
           </Text>
           <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
           <LineChart
             style={styles.graphStyle}
-            data={constructData(history)}
+            data={constructData(userData.history)}
             width={screenWidth * 0.9}
             height={220}
             chartConfig={chartConfig}
             fromZero={true}
-            segments={segments < 10 ? segments : 5}          
+            segments={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); })}          
           /> 
         </React.Fragment> :
         null}
 
-        <TouchableOpacity style={{alignSelf: 'stretch', marginHorizontal: 20}} onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity style={{alignSelf: 'stretch', marginHorizontal: 20}} onPress={logoutCallback}>
           <View style={styles.logout}>
             <Text style={{color: 'white', paddingVertical: 10, fontSize: 18, fontWeight: '500'}}>Log Out</Text>
           </View>

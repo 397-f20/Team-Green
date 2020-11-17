@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Tab = createBottomTabNavigator();
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons';
 import {firebase} from './config/firebase';
-import UserContext from './src/UserContext';
+import { ContextProvider } from './src/UserContext';
 
 // components
 import Profile from './src/Profile/Profile.js';
@@ -23,9 +23,9 @@ const App = () => {
   const [context, setContext] = useState({userData: null, userUID: null});
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS == "ios" ? "padding" : "height"}>
-      <UserContext.Provider value={[context, setContext]}>
+      <ContextProvider>
         <MainNavigator />
-      </UserContext.Provider>
+      </ContextProvider>
     </KeyboardAvoidingView>
   )
 }
