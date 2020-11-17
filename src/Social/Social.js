@@ -1,20 +1,25 @@
 // package dependencies
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import { firebase } from '../../config/firebase'
 import UserContext from '../UserContext';
+import 'firebase/auth';
 
 // components
 import Background from '../FishTank/Background.js';
-import Dropdown from './Dropdown.js';
 import SendFishFood from './SendFishFood.js';
 import Logout from '../Logout/Logout';
+import NewFriendModal from './NewFriendModal';
+import AddFriendButton from './AddFriendButton';
+import Dropdown from './Dropdown.js';
+
 
 const Social = () => {
   const [context, setContext] = useContext(UserContext);
   const [usersData, setUsersData] = useState({});
   const [displayedUser, setDisplayedUser] = useState({});
   const [fishRendered, setFishRendered] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const db = firebase.database().ref('users');
@@ -43,6 +48,10 @@ const Social = () => {
     }
   }
 
+  const showAddFriend = () => {
+    setModalVisible(true);
+  }
+
   const sendFishFoodCallback = useCallback(() => {
     if (displayedUser.id === context.userData.id) {
       alert("you can't send food to yourself!")
@@ -62,8 +71,16 @@ const Social = () => {
   return (
     <View style={styles.container}>      
       <Background fishObjects={fishRendered} />
+
+      <Dropdown style={styles.dropdown} userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} friendsList={context.userData.friends} />
+
+      <AddFriendButton addFriend={showAddFriend} />
       <Logout style={styles.logout}/>
-      <Dropdown userData={usersData} selectedUser={displayedUser.name} changeUser={changeUser} loggedIn={context.userData.name} />
+
+      {modalVisible && <NewFriendModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+}
+
+
       <SendFishFood callback={sendFishFoodCallback} />
     </View>
   );
@@ -72,7 +89,14 @@ const Social = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  }  
+  },
+  modal:{
+    width: 25, 
+    height: 25
+  },
+  dropdown: {
+    top: 500
+  }
 });
 
 export default Social;

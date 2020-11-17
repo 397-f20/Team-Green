@@ -1,12 +1,10 @@
 /*
-    Logout Button Component
+    Add Friend Button Component
 
     **Note**
     This button is currently fixed on each tab screen so that it's accessible.
     This design is temporary and can be changed for the screens. 
 */
-
-
 
 import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
@@ -16,25 +14,13 @@ import 'firebase/auth';
 
 
 
-const Logout = () => {
+const AddFriendButton = (props) => {
     const navigation = useNavigation(); // get navigation object
 
-    // Signs user out with firebase
-    // Redirects to login page if successful
-    const logout = () => {
-        firebase.auth().signOut()
-            .then(function() {
-                navigation.navigate('Login');
-            })
-            .catch(function(err) {
-                alert(err.message);
-            })
-    }
-
     return (
-    <TouchableOpacity style={styles.buttonPosition} onPress={logout} activeOpacity={1}>
+    <TouchableOpacity style={styles.buttonPosition} activeOpacity={1} onPress={props.addFriend}>
         <View style={styles.button}>
-            <Text style={styles.text}>Log out</Text>
+            <Text style={styles.text}>Add Friend</Text>
         </View>                
     </TouchableOpacity>
     )
@@ -48,7 +34,8 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: 'rgba(0, 164, 228, 0.8)',
         justifyContent: 'center',
-        alignItems: 'center'               
+        alignItems: 'center',
+        zIndex: 100           
     },
     text: {
         fontSize: 20,
@@ -56,10 +43,10 @@ const styles = StyleSheet.create({
     },
     buttonPosition: {
         position: 'absolute',
-        right: 10,
+        left: 10,
         top: 45               
     }
 })
 
 
-export default Logout;
+export default AddFriendButton;

@@ -40,10 +40,11 @@ const Login = ({navigation}) => {
                     const newUserData = {
                         fish: 0,
                         fishObjects: {},
-                        friends: {},
                         history: {[key] : 0},
+                        friends: [{friendUID: user.uid, friendName: displayName, friendEmail: username}],
                         id: user.uid,
-                        name: displayName
+                        name: displayName,
+                        email: username
                     }
                     firebase.database().ref('users/' + user.uid).set(newUserData);
                     setContext({
