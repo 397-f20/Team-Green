@@ -7,24 +7,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Tab = createBottomTabNavigator();
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons';
 import {firebase} from './config/firebase';
-import UserContext from './src/UserContext';
+import { ContextProvider } from './src/UserContext';
 
 // components
 import Profile from './src/Profile/Profile.js';
 import Social from './src/Social/Social.js';
 import Timer from './src/Timer/Timer.js';
 import Login from './src/Login/Login';
+import Logout from './src/Logout/Logout';
 
 
 const Stack = createStackNavigator();
 
-const App = () => {
+const App = () => {  
   const [context, setContext] = useState({userData: null, userUID: null});
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS == "ios" ? "padding" : "height"}>
-      <UserContext.Provider value={[context, setContext]}>
+      <ContextProvider>
         <MainNavigator />
-      </UserContext.Provider>
+      </ContextProvider>
     </KeyboardAvoidingView>
   )
 }
@@ -41,9 +42,9 @@ const MainNavigator = () => {
 }
 
 const Home = () => {
-  return (      
+  return (   
     <Tab.Navigator
-      initialRouteName="Social"
+      initialRouteName="Timer"
       tabBarOptions={{activeTintColor: "black", inactiveTintColor: '#2a2a72', style: {backgroundColor: '#00a4e4', borderTopColor: '#00a4e4', color: 'white'}}}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
@@ -67,14 +68,13 @@ const Home = () => {
           return iconName;
         },
       })}
-    >
-      <Tab.Screen name="Social" component={Social} 
-      />
+    >      
       <Tab.Screen name="Timer" component={Timer}
       />
-      <Tab.Screen name="Profile" component={Profile} 
-      /> 
-    </Tab.Navigator>
+      <Tab.Screen name="Social" component={Social} 
+      />
+      <Tab.Screen name="Profile" component={Profile} />
+    </Tab.Navigator> 
   );
 }
 

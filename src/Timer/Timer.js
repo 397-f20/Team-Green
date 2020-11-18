@@ -4,57 +4,34 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {firebase} from '../../config/firebase'
 
 import Background from '../FishTank/Background.js';
-import { fishArrayLength } from '../FishTank/FishArray';
-import UserContext from '../UserContext';
+import UseFishFoodModal from './UseFishFoodModal.js';
+import Logout from '../Logout/Logout';
+import ProgressBar from './ProgressBar';
+
+import { useUserContext } from '../UserContext';
+
+import INTERVALS from '../../config/intervals'; // constant intervals
+
+
+
 
 const Timer = () => {
-
-  const [context, setContext]= useContext(UserContext);
-  const [user, setUser] = useState({});
-  const [usr, setUsr] = useState(context.userData);
-
+  const { userData } = useUserContext();
 
   const [time, setTime] = useState(0);
+  const [initialTime, setInitialTime] = useState(25);
   const [isPaused, setIsPaused] = useState(true);
   const [completedTask, setCompletedTask] = useState(false);
   const [isStopped, setIsStopped] = useState(true);
-  const [fishRendered, setFishRendered] = useState([]);
-  const [history, setHistory] = useState([]);
+  const [intervalProgress, setIntervalProgress] = useState(0);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const timerDuration = 10; 
 
-  useEffect(() => {
-    const db = firebase.database().ref('users');
-    db.on('value', snap => {
-      if (snap.val()) {
-        setUser(snap.val());
-        console.log("death")
-        console.log(usr)
-        if (usr.id in snap.val()){
-          setHistory(snap.val()[usr.id].history);
-        }
-        if (usr){
-          setFishRendered(snap.val()[usr.id].fishObjects);
-        }
-      }
-    }, error => console.log(error));
-  }, []);
-
-  // const usr = user.a;
-  /*useEffect(()=>{
-    if ("a" in user) {
-      setUsr(user.a);
-    }
-  }, [user])
-  */
-
   useEffect(() => {  
     if (time===0 && !isPaused){
-      setIsPaused(true);
-      setCompletedTask(true);
-      addFishObject(usr.id);
-      incrementFish(usr.id);
-      updateHistory(usr.id);
+      completedCycle();
     }
     else if (!isPaused) {
       setTimeout(() => {
@@ -64,25 +41,36 @@ const Timer = () => {
     }
   }, [time, isPaused]);
 
-  function addFishObject(userId){
-    let idx = Math.floor(Math.random() * fishArrayLength());
-    let size = Math.floor(Math.random() * 40) + 25;
-    firebase.database().ref('users').child(userId).child('fishObjects').push({idx: idx, size: size});
+  const completedCycle = () => {
+    setIsPaused(true);   
+    
+    if (INTERVALS[intervalProgress].type === 'study') {
+      setCompletedTask(true);
+      localUpdateHistory(userData.id);
+      setModalVisible(true);      
+
+    }
+
+    // resets if at end of 8 intervals
+    if (intervalProgress === INTERVALS.length - 1) {
+      setIntervalProgress(0);
+      setInitialTime(INTERVALS[0].length);
+    }
+    else {
+      setInitialTime(INTERVALS[intervalProgress + 1].length);
+      setIntervalProgress(intervalProgress + 1);
+    }
   }
 
-  function incrementFish(userId) {
-    firebase.database().ref('users').child(userId).child('fish').set(usr.fish +1);
-  }
-
-  function updateHistory(userId) {
+  function localUpdateHistory(userId) {
     const now = new Date(Date.now());
     const year = now.getUTCFullYear();
     const month = now.getUTCMonth();
-    const day = now.getUTCDay();
+    const day = now.getUTCDate();
     const today = new Date(Date.UTC(year, month, day));
     const key = today.valueOf();
-    if (history && history[key]){
-      firebase.database().ref('users').child(userId).child('history').child(key).set( history[key] + 1);
+    if (userData.history && userData.history[key]){
+      firebase.database().ref('users').child(userId).child('history').child(key).set( userData.history[key] + 1);
     }
     else{
       firebase.database().ref('users').child(userId).child('history').child(key).set(1);
@@ -116,8 +104,8 @@ const Timer = () => {
 
   return (
     <View style={styles.timer}>
-      <Background fishObjects={fishRendered} />
-      
+      <Background fishObjects={userData.fishObjects} /> 
+      <Logout/>
       <CountdownCircleTimer
         key={isStopped || time=== 0}
         isPlaying={!isPaused}
@@ -129,8 +117,10 @@ const Timer = () => {
         ]}
         size={300}
         >
-          <Text style={styles.timerText}>{isStopped ? "25:00" : displayTime(time) }</Text>
+          <Text style={styles.timerText}>{isStopped ? `${initialTime}:00` : displayTime(time) }</Text>
       </CountdownCircleTimer>
+
+      <ProgressBar intervalProgress={intervalProgress}/>
 
       {isStopped &&
       <TouchableOpacity style={styles.buttonBase} onPress={() => { startTimer() }}>
@@ -147,7 +137,9 @@ const Timer = () => {
         <Text style={styles.font}>Restart</Text>
       </TouchableOpacity>}
 
-      {completedTask && <Text>Task complete! You've got a new fish!</Text>}
+      {modalVisible && <UseFishFoodModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+}
+
     </View>
   );
 };
@@ -158,6 +150,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  modal:{
+    width: 25, 
+    height: 25
   },
   timerText: {
     fontSize: 60
