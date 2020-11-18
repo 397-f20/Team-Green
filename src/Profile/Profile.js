@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
@@ -22,6 +22,21 @@ const chartConfig = {
 
 const Profile = ({navigation}) => {
   const { userData, userUidCallback } = useUserContext();
+  const [segments, setSegments] = useState(1);
+  const [fromZero, setFromZero] = useState(false);
+  
+  useEffect(() => {
+    let max = Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); });
+    if (max > 2){
+      setSegments(max);
+      setFromZero(true);
+    }
+    else{
+      setSegments(1);
+      setFromZero(false);
+    }
+  },[userData])
+  
 
   // Formats date as month-day
   function getDate (ms) {
@@ -33,12 +48,9 @@ const Profile = ({navigation}) => {
     return `${month}-${day}`;
   }
 
-  function constructData(history) {
-    let labels = Object.keys(history).map(e => getDate(e));
-    let dataPoints = Object.values(history);
-    // console.log("construct data")
-    // console.log(labels)
-    // console.log(dataPoints)
+  function constructData() {
+    let labels = Object.keys(userData.history).map(e => getDate(e));
+    let dataPoints = Object.values(userData.history);
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
 
@@ -66,12 +78,12 @@ const Profile = ({navigation}) => {
           <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
           <LineChart
             style={styles.graphStyle}
-            data={constructData(userData.history)}
+            data={constructData()}
             width={screenWidth * 0.9}
             height={220}
             chartConfig={chartConfig}
-            fromZero={true}
-            segments={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); })}          
+            fromZero={fromZero}
+            segments={segments}
           /> 
         </React.Fragment> :
         null}
