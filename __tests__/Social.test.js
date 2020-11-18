@@ -4,7 +4,7 @@ import { expect, it, done } from '@jest/globals';
 import ShallowRenderer from 'react-test-renderer/shallow';
 
 import Background from '../src/FishTank/Background';
-import Social from '../src/Social/Social';
+import NewFriendModal from '../src/Social/NewFriendModal';
 import Dropdown from '../src/Social/Dropdown';
 
 const renderer = new ShallowRenderer();
@@ -61,10 +61,8 @@ describe("Social Page Testing", () => {
             const search = newFriendModal.queryByText('Search Friends by Email');
             const close = newFriendModal.queryByText('Close');
 
-
             expect(search).toBeTruthy();
             expect(close).toBeTruthy();
         };
-    });
-
+    })
 });

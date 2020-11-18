@@ -1,15 +1,16 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
 import { firebase } from '../../config/firebase'
 import 'firebase/auth';
 import { Validation } from './Validation';
 
 import Background from '../FishTank/Background.js';
-import UserContext from '../UserContext';
+import { useUserContext } from '../UserContext';
 
-const Login = ({navigation}) => {
-    const [context, setContext] = useContext(UserContext);
-
+const Login = ({navigation}) => {   
+    
+    const { userUidCallback } = useUserContext();
+    
     const [titleAnimated, setTitleAnimated] = useState(new Animated.Value(0));
     const [displayName, setDisplayName] = useState('');
     const [username, setUsername] = useState('');
@@ -19,6 +20,7 @@ const Login = ({navigation}) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
+        checkUserSession();
         runTitleAnimation();
     }, [])
 
@@ -28,43 +30,73 @@ const Login = ({navigation}) => {
             if (validated) {
                 firebase.auth().createUserWithEmailAndPassword(username, password).then(function (user) {
                     var user = firebase.auth().currentUser;
+                    const now = new Date(Date.now());
+                    const year = now.getUTCFullYear();
+                    const month = now.getUTCMonth();
+                    const day = now.getUTCDate();
+                    const today = new Date(Date.UTC(year, month, day));
+                    const key = today.valueOf();
+
                     const newUserData = {
                         fish: 0,
                         fishObjects: {},
-                        friends: {},
-                        history: [],
+                        history: {[key] : 0},
+                        friends: [{friendUID: user.uid, friendName: displayName, friendEmail: username}],
                         id: user.uid,
-                        name: displayName
+                        name: displayName,
+                        email: username
                     }
                     firebase.database().ref('users/' + user.uid).set(newUserData);
-                    setContext({
-                        userData: newUserData,
-                        userUid: user.uid
-                    })
-                    navigation.navigate('Home', {screen: 'Social'});
+                    userUidCallback(newUserData.id);
+                    navigation.navigate('Home', {screen: 'Timer'});
                 }, function (error){
                     console.log(error.message);
                     setErrorMessage(error.message);
                 })
             }
         } else {
-            firebase.auth().signInWithEmailAndPassword(username, password).then(function(user) {
-                var user = firebase.auth().currentUser;
-                const db = firebase.database().ref('users').child(user.uid);
-                db.on('value', snap => {
-                    if (snap.val()) {
-                        setContext({
-                            userData: snap.val(),
-                            userUid: user.uid
-                        })
-                        navigation.navigate('Home', {screen: 'Social'});
-                    } 
-                }, error => alert(error))
-            }, function (error){
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL) // persistent login can only be cleared on user sign out
+                .then(function() {                
+                    firebase.auth().signInWithEmailAndPassword(username, password)
+                        .then(function(user) {
+                            const currentUser = firebase.auth().currentUser;
+                            userUidCallback(currentUser.uid)
+                            navigation.navigate('Home', {screen: 'Timer'});
+                            // const db = firebase.database().ref('users').child(currentUser.uid);
+                            // db.on('value', snap => {
+                            //     if (snap.val()) {
+                            //         userUidCallback(currenUser.id);
+                            //         navigation.navigate('Home', {screen: 'Timer'});
+                            //     } 
+                            // }, error => alert(error))
+                    }, function (error){
+                        console.log(error.message);
+                        setErrorMessage(error.message);
+                    })
+            })
+            .catch(function(error) {
                 console.log(error.message);
                 setErrorMessage(error.message);
             })
         }    
+    }
+
+    // Checks if there is an existing user session
+    // If so, sets the user context and then navigates to home stack
+    const checkUserSession = () => {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {                
+                // const db = firebase.database().ref('users').child(user.uid);
+                userUidCallback(user.uid)
+                navigation.navigate('Home', {screen: 'Timer'});
+                // db.on('value', snap => {
+                //     if (snap.val()) {
+                //         userUidCallback(snapid);
+                //         navigation.navigate('Home', {screen: 'Timer'});
+                //     } 
+                // }, error => alert(error))
+            }        
+        })
     }
 
     const animationDuration = 10000;
