@@ -67,6 +67,7 @@ const Profile = ({navigation}) => {
             height={220}
             chartConfig={chartConfig}
             segments={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); }) === 1 ? 1 : Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); })}
+            fromZero={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); }) > 2 ? true : false}
           /> 
         </React.Fragment> :
         null}
