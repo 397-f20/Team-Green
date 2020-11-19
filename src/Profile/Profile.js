@@ -23,21 +23,6 @@ const chartConfig = {
 
 const Profile = ({navigation}) => {
   const { userData, userUidCallback } = useUserContext();
-  const [segments, setSegments] = useState(1);
-  const [fromZero, setFromZero] = useState(false);
-  
-  useEffect(() => {
-    let max = Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); });
-    if (max > 2){
-      setSegments(max);
-      setFromZero(true);
-    }
-    else{
-      setSegments(1);
-      setFromZero(false);
-    }
-  },[userData])
-  
 
   // Formats date as month-day
   function getDate (ms) {
@@ -81,8 +66,7 @@ const Profile = ({navigation}) => {
             width={screenWidth * 0.9}
             height={220}
             chartConfig={chartConfig}
-            fromZero={fromZero}
-            segments={segments}
+            segments={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); }) === 1 ? 1 : Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); })}
           /> 
         </React.Fragment> :
         null}

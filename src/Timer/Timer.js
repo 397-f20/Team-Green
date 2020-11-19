@@ -44,7 +44,7 @@ const Timer = () => {
     const now = new Date(Date.now());
     const year = now.getUTCFullYear();
     const month = now.getUTCMonth();
-    const day = now.getUTCDate();
+    const day = now.getUTCDate() + 1;
     const today = new Date(Date.UTC(year, month, day));
     const key = today.valueOf();
     if (userData.history && userData.history[key]){
