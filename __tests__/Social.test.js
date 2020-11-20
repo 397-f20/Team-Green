@@ -24,35 +24,37 @@ describe("Social Page Testing", () => {
     });
 
     it('dropdown components passed in friends', () => {
-        const usersTest = {
-            'x': {
-                fish: 10,
-                id: "x",
-                name: "Shaggy Rogers",
-                email: "x@abc.com",
-                friends: {
-                    "a": {
-                        friendName: "Scooby Doo",
-                        friendEmail: "y@abc.com",
-                        friendUID: "y"
+        async() => {
+            const usersTest = {
+                'x': {
+                    fish: 10,
+                    id: "x",
+                    name: "Shaggy Rogers",
+                    email: "x@abc.com",
+                    friends: {
+                        "a": {
+                            friendName: "Scooby Doo",
+                            friendEmail: "y@abc.com",
+                            friendUID: "y"
+                        }
                     }
-                }
-            },
-            'y': {
-                fish: 1,
-                id: "y",
-                name: "Scooby Doo",
-                email: "y@abc.com",
-                friends: {
-                    "b": {
-                        friendName: "Shaggy Rogers",
-                        friendEmail: "x@abc.com",
-                        friendUID: "x"
+                },
+                'y': {
+                    fish: 1,
+                    id: "y",
+                    name: "Scooby Doo",
+                    email: "y@abc.com",
+                    friends: {
+                        "b": {
+                            friendName: "Shaggy Rogers",
+                            friendEmail: "x@abc.com",
+                            friendUID: "x"
+                        }
                     }
                 }
             }
+            render(<Dropdown userData={usersTest} loggedIn={usersTest['x']} friendsList={usersTest['x'].friends} />);
         }
-        render(<Dropdown userData={usersTest} loggedIn={usersTest['x']} friendsList={usersTest['x'].friends} />);
     });
 
     it('add friends modal displays correctly', () => {
