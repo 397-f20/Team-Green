@@ -1,43 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-
-import INTERVALS from '../../config/intervals'; // constant intervals
-
-
+import React from 'react';
+import { View } from 'react-native';
 
 const IntervalBlock = ({data, isFilled}) => {
 
     const getBackgroundColor = () => {
-        return (isFilled) 
-                ? (data.type === 'study') 
-                    ? 'blue'
-                    : 'orange'
-                : 'transparent';
-    }    
-
-    const dynamicStyles = {
-        width: data.length * 2,
-        backgroundColor: getBackgroundColor(),
-        borderColor: (data.type === 'study') ? 'blue' : 'orange'
+        if (isFilled && data.type === 'study') return 'blue'
+        else if (isFilled) return 'orange'
+        return 'transparent'
     }
 
-    console.log(dynamicStyles);
-
-
-    return (
-        <View style={{...styles.block, ...dynamicStyles}}/>      
-      
-    )
-}
-
-const styles = StyleSheet.create({
-    block: {
-        height: 8,
+    return (<View style={{
+        width: data.length * 1.5 + 5,
+        height: 10,
         borderRadius: 10,
-        borderWidth: 2                
-    }
-})
-
-
+        borderWidth: 2,
+        marginHorizontal: 5,
+        backgroundColor: getBackgroundColor(),
+        borderColor: data.type === 'study' ? 'blue' : 'orange'
+    }}/>)
+}
 
 export default IntervalBlock;

@@ -42,13 +42,12 @@ const Timer = () => {
   }, [time, isPaused]);
 
   const completedCycle = () => {
-    setIsPaused(true);   
+    setIsPaused(true);
+    setCompletedTask(true);   
     
     if (INTERVALS[intervalProgress].type === 'study') {
-      setCompletedTask(true);
       localUpdateHistory(userData.id);
       setModalVisible(true);      
-
     }
 
     // resets if at end of 8 intervals
@@ -120,8 +119,9 @@ const Timer = () => {
           <Text style={styles.timerText}>{isStopped ? `${initialTime}:00` : displayTime(time) }</Text>
       </CountdownCircleTimer>
 
-      <ProgressBar intervalProgress={intervalProgress}/>
-
+      <ProgressBar intervalProgress={intervalProgress} inProgress={!isPaused} />
+      
+      <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
       {isStopped &&
       <TouchableOpacity style={styles.buttonBase} onPress={() => { startTimer() }}>
         <Text style={styles.font}>Start</Text>
@@ -136,6 +136,7 @@ const Timer = () => {
       <TouchableOpacity style={styles.buttonBase} onPress={() => stopTimer()}>
         <Text style={styles.font}>Restart</Text>
       </TouchableOpacity>}
+      </View>
 
       {modalVisible && <UseFishFoodModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
 }

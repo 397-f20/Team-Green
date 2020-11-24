@@ -7,21 +7,40 @@ import INTERVALS from '../../config/intervals'; // constant intervals
 
 
 
-const ProgressBar = ({intervalProgress}) => {
+const ProgressBar = ({intervalProgress, inProgress}) => {
 
     
     const dynamicStyles = {        
-        color: (INTERVALS[intervalProgress].type === 'study') ? 'blue' : 'orange'
+        fontWeight: '600',
+        color: (INTERVALS[intervalProgress].type === 'study') ? 'white' : 'black'
+    }
+
+    const viewStyles = {
+        backgroundColor: (INTERVALS[intervalProgress].type === 'study') ? 'blue' : 'orange',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 3,
+        paddingHorizontal: 8,
+        borderRadius: 4
+    }
+
+    const getText = () => {
+        if (inProgress) {
+            if (INTERVALS[intervalProgress].type === 'study') return 'Currently: studying';
+            else return 'Currently: taking break';
+        }
+        if (INTERVALS[intervalProgress].type === 'study') return 'Next up: study';
+        else return 'Next up: break'
     }
 
     return (
-        <View>
+        <View style={{alignSelf: 'center'}}>
             <View style={styles.intervalBar}>{INTERVALS.map((interval, index) => (
                 <IntervalBlock key={index} data={interval} isFilled={intervalProgress > index}/>
             ))}
             </View>
-            <View>
-                <Text style={{ ...dynamicStyles}}>lorum</Text>
+            <View style={{...viewStyles, opacity: 0.7}}>
+            <Text style={{ ...dynamicStyles}}>You've completed {Math.ceil(intervalProgress / 2)} cycle(s). {getText()}</Text>
             </View>
         </View>
     )
@@ -31,9 +50,8 @@ const styles = StyleSheet.create({
     intervalBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center', 
-        marginBottom: 10,
-        backgroundColor: 'yellow'             
+        justifyContent: 'space-between', 
+        marginVertical: 10,
     }
 })
 
