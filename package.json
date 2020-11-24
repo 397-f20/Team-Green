@@ -20,6 +20,11 @@
   },
   "jest": {
     "preset": "jest-expo",
+    "timers": "fake",
+    "testEnvironment": "jsdom",    
+    "setupFiles": [
+      "./config/mock.js"
+    ],
     "testMatch": [
       "**/__tests__/**/*.[jt]s?(x)",
       "**/?(*.)+test.[jt]s?(x)"
