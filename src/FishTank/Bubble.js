@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Animated, StyleSheet, View, Dimensions, Easing } from 'react-native';
+import { Animated, StyleSheet, Dimensions, Easing } from 'react-native';
 
 // dimensions
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-const Bubble = (props) => {
+const Bubble = ( props ) => {
 
   const width_offset = Math.random() * (SCREEN_WIDTH - 50) + 25
 
@@ -53,14 +53,7 @@ const Bubble = (props) => {
       <LinearGradient
         // Background Linear Gradient
         colors={['rgba(255, 255, 255, 0.1)', 'rgba(0, 164, 228, 0.4)']}
-        style={{
-          left: 0,
-          top: 0,
-          position: 'absolute',
-          height: 30,
-          width: 30,
-          borderRadius: 15
-        }}
+        style={styles.gradient}
         start={[.3, .2]}
         end={[1, 1]}
       />
@@ -79,6 +72,14 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.4,
     shadowRadius: 8,
+  },
+  gradient: {
+    left: 0,
+    top: 0,
+    position: 'absolute',
+    height: 30,
+    width: 30,
+    borderRadius: 15
   }
 })
 

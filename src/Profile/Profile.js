@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
-import { firebase } from '../../config/firebase'
+import React from 'react';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Dimensions } from "react-native";
-import { BarChart, LineChart } from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 import ProfileHeader from "./ProfileHeader"
+import UserSummary from './UserSummary';
+import { useUserContext } from '../UserContext';
+import 'firebase/auth';
+import { firebase } from '../../config/firebase'
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -18,72 +21,62 @@ const chartConfig = {
   decimalPlaces: 0, // optional, defaults to 2dp
 };
 
-const Profile = () => {
-  const [user, setUser] = useState({});
-  const [usr, setUsr] = useState({ "friends": [] });
+const Profile = ({navigation}) => {
+  const { userData, userUidCallback } = useUserContext();
 
-  const [history, setHistory] = useState({});
-  const [segments, setSegments] = useState(2);
-
-  useEffect(() => {
-    const db = firebase.database().ref('users');
-    db.on('value', snap => {
-      if (snap.val()) {
-        setUser(snap.val());
-      }
-    }, error => console.log(error));
-  }, []);
-
-
-  // Currently user being the users list from JSON and usr being the individual user
-  // const usr = user.a;
-  useEffect(() => {
-    if ("a" in user) {
-      setUsr(user.a);
-      setHistory(user.a.history);
-      let max = Object.values(user.a.history).reduce(function (a, b) { return Math.max(a, b); });
-      setSegments(max);
-    }
-  }, [user])
-
-
-  // Format date
+  // Formats date as month-day
   function getDate (ms) {
-    const date = new Date();
+    const date = new Date;
     date.setTime(ms);
-    
+
     const month = date.getMonth() + 1;
-    const day = date.getDate();    
+    const day = date.getDate();
     return `${month}-${day}`;
   }
 
-  function constructData(history) {
-    let labels = Object.keys(history).map(e => getDate(e));
-    let dataPoints = Object.values(history);
+  function constructData() {
+    let labels = Object.keys(userData.history).map(e => getDate(e));
+    let dataPoints = Object.values(userData.history);
     return { labels: labels, datasets: [{ data: dataPoints }] };
   }
-  usr.img = require('../../assets/profiles/shaggy.jpg') ////////////////////////eventually get images from server
+
+  const logoutCallback = () => {
+    firebase.auth().signOut()
+    .then(function() {
+        navigation.navigate('Login');
+        userUidCallback(null);
+    })
+    .catch(function(err) {
+        alert(err.message);
+    })
+    return;
+  }
+
   return (
     <View style={styles.container}>
-      <ProfileHeader title={usr.name} img={usr.img} />
+      <ProfileHeader title={userData.name} img={require('../../assets/profiles/shaggy.jpg')} />
       <ScrollView style={{ alignSelf: "stretch", paddingLeft: 10 }}>
-        <Text style={{paddingVertical: 10}}>
-          Congratulations! You have studied {Object.values(history).length} days in total!
-        </Text>
-        <View>
-        <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
-        <LineChart
-          style={styles.graphStyle}
-          data={constructData(history)}
-          width={screenWidth * 0.9}
-          height={220}
-          chartConfig={chartConfig}
-          fromZero={true}
-          segments={segments < 10 ? segments : 5}
-          //verticalLabelRotation={30}
-          //withVerticalLabels={true}
-        />
-        </View>
+        {Object.keys(userData.history).length > 0 ?
+        <React.Fragment>
+          <UserSummary userData={userData} />
+          <Text style={styles.graphTitle}> Studying Progress (cycles) </Text>
+          <LineChart
+            style={styles.graphStyle}
+            data={constructData()}
+            width={screenWidth * 0.9}
+            height={220}
+            chartConfig={chartConfig}
+            segments={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); }) === 1 ? 1 : Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); })}
+            fromZero={Object.values(userData.history).reduce(function (a, b) { return Math.max(a, b); }) > 2 ? true : false}
+          /> 
+        </React.Fragment> :
+        null}
+
+        <TouchableOpacity style={{alignSelf: 'stretch', marginHorizontal: 20}} onPress={logoutCallback}>
+          <View style={styles.logout}>
+            <Text style={{color: 'white', paddingVertical: 10, fontSize: 18, fontWeight: '500'}}>Log Out</Text>
+          </View>
+        </TouchableOpacity> 
       </ScrollView>
     </View>
   )
@@ -93,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'lightblue',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   graphStyle: {
     borderRadius: 16,
@@ -109,6 +102,14 @@ const styles = StyleSheet.create({
   username: {
     marginTop: 20,
     fontSize: 16
+  },
+  logout:{
+    alignItems: 'center', 
+    alignSelf:'stretch', 
+    marginVertical: 20,
+    backgroundColor: 'rgb(7, 54, 72)',
+    justifyContent: 'center',
+    borderRadius: 12
   }
 });
 

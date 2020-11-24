@@ -5,19 +5,20 @@ import { View } from 'react-native';
 // components
 import Fish from './Fish.js';
 
-const FishWrapper = (props) => {
+const FishWrapper = ( props ) => {
 
-  const [renderedFish, setRenderedFish] = useState(new Array(props.numFish).fill('', 0, props.numFish))
+  const [renderedFish, setRenderedFish] = useState(props.fishObjects)
 
   useEffect(() => {
     setRenderedFish([])
-    setRenderedFish(new Array(props.numFish).fill('', 0, props.numFish))
-  }, [props.numFish])
+    setRenderedFish(props.fishObjects);
+  }, [props.fishObjects])
+
   return (
     <View>
-      {renderedFish.map((fish, index) => (
-        <Fish SCREEN_WIDTH={props.SCREEN_WIDTH} SCREEN_HEIGHT={props.SCREEN_HEIGHT} key={index} />
-      ))}
+      {(renderedFish && renderedFish != []) ? Object.keys(renderedFish).map((fish) => (
+        <Fish SCREEN_WIDTH={props.SCREEN_WIDTH} SCREEN_HEIGHT={props.SCREEN_HEIGHT} key={fish} random={Math.random()} sizeRandom={renderedFish[fish].size} fishType={renderedFish[fish].idx} />
+      )) : null}
     </View>
   )
 }

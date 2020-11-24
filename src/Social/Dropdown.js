@@ -1,22 +1,20 @@
 import React, {useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 
-const Dropdown = (props) => {
+const Dropdown = ({ friendsList, loggedIn, changeUser, currentlySelected }) => {
 
-  const [showDropdown, setShowDropdown] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const changeUser = (user) => {
+  const internalChangeUser = (uid) => {
     setShowDropdown(false);
-    props.changeUser(user)
+    changeUser(uid);
   }
 
   return (
     <View >
-      <TouchableOpacity activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
-        <View style={styles.currentSelection}>
-          <Text style={styles.currentSelectionText}>{props.loggedIn}</Text>
-          <Text style={styles.currentSelectionTextCarat}>&#8964;</Text>
-        </View>
+      <TouchableOpacity style={styles.currentSelection} activeOpacity={1} onPress={() => setShowDropdown(!showDropdown)}>
+        <Text style={styles.currentSelectionText}>{currentlySelected.name} {currentlySelected.id === loggedIn ? "(You)" : ""}</Text>
+        <Text style={styles.currentSelectionTextCarat}>&#8964;</Text>
       </TouchableOpacity>
 
       {showDropdown &&
@@ -24,8 +22,8 @@ const Dropdown = (props) => {
           contentContainerStyle={styles.scrollView}
         >
           {
-            Object.keys(props.userData).map((user, index) => (
-              <SingleOption user={props.userData[user]} key={index} changeUser={() => changeUser(user)} />
+            Object.values(friendsList).map((friend) => (
+              <SingleOption user={friend} key={friend.friendUID} changeUser={internalChangeUser} loggedIn={loggedIn} />
             ))
           }
         </ScrollView>}
@@ -33,11 +31,11 @@ const Dropdown = (props) => {
   )
 }
 
-const SingleOption = (props) => {
+const SingleOption = ({ user, changeUser, loggedIn }) => {
   return (
-    <TouchableOpacity onPress={props.changeUser}>
+    <TouchableOpacity onPress={() => changeUser(user.friendUID)}>
       <View style={styles.singleOption}>
-        <Text>{props.user.name}</Text>
+        <Text>{user.friendName} {user.friendUID === loggedIn ? "(You)" : ""}</Text>
       </View>
     </TouchableOpacity>
   )
@@ -64,13 +62,12 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     borderRadius: 25,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   currentSelectionText: {
     paddingHorizontal: 20,
     color: 'black',
     fontWeight: '500'
-    
   },
   currentSelectionTextCarat: {
     paddingHorizontal: 20,

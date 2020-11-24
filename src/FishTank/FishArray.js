@@ -23,7 +23,6 @@ export const fishArray = {
     name: require('../../assets/magikarp.png'),
     ratio: 1
   },
-
 }
 
 export const fishArrayLength = () => {

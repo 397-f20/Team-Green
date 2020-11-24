@@ -9,11 +9,11 @@ import React from 'react';
 import { create } from 'react-test-renderer';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import {fireEvent, render, act } from '@testing-library/react-native'; // using react native testing library
-import { firebase } from '../../config/firebase';
+import { firebase } from '../config/firebase';
 
-import Timer from '../../src/Timer/Timer';
-import Social from '../../src/Social/Social';
-import Background from '../../src/FishTank/Background';
+import Timer from '../src/Timer/Timer';
+import Social from '../src/Social/Social';
+import Background from '../src/FishTank/Background';
 
 const shallow = new ShallowRenderer(); // shallow rendering for components
 const testUser = 'a'; // user to test on

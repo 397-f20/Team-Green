@@ -1,17 +1,17 @@
 import React, { useState, useEffect} from 'react';
 import { Image, Animated, StyleSheet } from 'react-native';
-import { fishArray, fishArrayLength } from './FishArray.js';
+import { fishArray } from './FishArray.js';
 
-const Fish = (props) => {
+const Fish = ( props ) => {
 
   const [fishAnimated, setFishAnimated] = useState(new Animated.Value(0));
-  const animationDuration = 25000;
-  const chosenIndex = Math.floor(Math.random() * fishArrayLength());
+  const animationDuration = 250000 * props.random + 75000;
+  const chosenIndex = props.fishType; 
   const [name, setName] = useState(fishArray[chosenIndex].name)
   const [ratio, setRatio] = useState(fishArray[chosenIndex].ratio)
   const [initialTop, setInitialTop] = useState(Math.floor(Math.random() * (props.SCREEN_HEIGHT - 100)) + 50)
   const [initialLeft, setInitialLeft] = useState(Math.floor(Math.random() * (props.SCREEN_WIDTH -100)) + 50)
-  const [size, setSize] = useState(Math.floor(Math.random() * 25) + 25)
+  const [size, setSize] = useState(props.sizeRandom);
 
   const runFishAnimation = () => {
     Animated.loop(
@@ -32,23 +32,20 @@ const Fish = (props) => {
 
   // TO DO
   const getTranslateX = () => {
-
-    const difference = props.SCREEN_WIDTH - initialLeft;
-    const moveRight = (props.SCREEN_WIDTH - 50) - initialLeft;
-    const moveLeft = 25 - initialLeft; 
+    const difference = (props.SCREEN_WIDTH - initialLeft);
+    const moveRight = ((props.SCREEN_WIDTH - 50) - initialLeft);
+    const moveLeft = (25 - initialLeft); 
 
     if (difference > props.SCREEN_WIDTH / 2) {
       return [0, moveRight - 10, moveRight, moveRight  - 10, moveLeft + 10,  moveLeft, moveLeft + 10, moveRight - 10, moveRight, moveRight - 10, 10, 0];
     } else {
       return [0, moveLeft + 10, moveLeft, moveLeft + 10, moveRight - 10, moveRight, moveRight - 10, moveLeft + 10, moveLeft, moveLeft + 10, -10, 0];
     }
-
   }
 
    // TO DO
    const getTranslateY = () => {
     const difference = props.SCREEN_HEIGHT - initialTop;
-
 
     if (difference > props.SCREEN_HEIGHT / 2) {
       return [0, 5, 15, 35, 75, 135, 195, 235, 255, 265, 270, 265, 255, 235, 195, 135, 75, 35, 15, 5, 0]
@@ -58,7 +55,6 @@ const Fish = (props) => {
   }
 
   useEffect(() => {
-
     runFishAnimation();
   }, [])
 

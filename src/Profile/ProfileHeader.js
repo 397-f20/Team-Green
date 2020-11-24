@@ -5,14 +5,14 @@ const ProfileHeader = ({title, img}) => {
   return (
     <View style={styles.header}>
       <Text style={styles.text}>{title}</Text>
-      <Image style = {styles.img} source={img}/>
+      <Image style={styles.img} source={img}/>
     </View>
   );
 };
+
 ProfileHeader.defaultProps = {
   title: 'Your Name',
   img: "https://randomuser.me/api/portraits/men/1.jpg"
-
 };
 
 const styles = StyleSheet.create({

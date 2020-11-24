@@ -10,7 +10,7 @@ import { create } from 'react-test-renderer';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import {fireEvent, render, act } from '@testing-library/react-native'; // using react native testing library
 
-import Timer from '../../src/Timer/Timer';
+import Timer from '../src/Timer/Timer';
 
 
 const TIME_DURATION = 10; // constant for value the timer should start as in seconds (s) after press 
