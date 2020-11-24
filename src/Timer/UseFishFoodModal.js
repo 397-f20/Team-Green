@@ -7,7 +7,7 @@ const SCREEN_WIDTH = Dimensions.get('screen').width
 import { useUserContext } from '../UserContext';
  
 const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
-  const { userData } = useUserContext();
+  const { userData } = useUserContext();  
   
   const [fishIdx, setFishIdx] = useState(0);
   const [fishSize, setFishSize] = useState(0);
@@ -40,6 +40,15 @@ const UseFishFoodModal = ({modalVisible, setModalVisible}) => {
   function updateFishObjects(){
     incrementFish();
     firebase.database().ref('users').child(userData.id).child('fishObjects').push({idx: fishIdx, size: fishSize});
+
+    // remove gift from user if they use it on fish
+    if (isResized) {
+      
+      const tempData = {...userData.gifts};
+      const tempDataKeys = Object.keys(tempData);
+      delete tempData[tempDataKeys[0]];
+      firebase.database().ref('users').child(userData.id).child('gifts').set(tempData);
+    }
   }
 
   function resizeFish(){
@@ -87,8 +96,7 @@ const styles = StyleSheet.create({
     position: "absolute", 
     alignItems: 'center', 
     alignSelf: 'center', 
-    backgroundColor: 'white',
-    height: '50%', 
+    backgroundColor: 'white',     
     borderRadius: 25,
     zIndex: 1000,
     padding: 20
