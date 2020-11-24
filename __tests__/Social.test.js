@@ -57,6 +57,7 @@ describe("Social Page Testing", () => {
         }
     });
 
+
     it('add friends modal displays correctly', () => {
         async() => {
             const newFriendModal = render(<NewFriendModal />);

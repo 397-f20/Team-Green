@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import ProfileHeader from "./ProfileHeader"
+import UserSummary from './UserSummary';
 import { useUserContext } from '../UserContext';
 import 'firebase/auth';
 import { firebase } from '../../config/firebase'
-import UserSummary from './UserSummary';
 
 const screenWidth = Dimensions.get("window").width;
 

@@ -6,16 +6,21 @@ import {firebase} from '../../config/firebase'
 import Background from '../FishTank/Background.js';
 import UseFishFoodModal from './UseFishFoodModal.js';
 import Logout from '../Logout/Logout';
+import ProgressBar from './ProgressBar';
 
 import { useUserContext } from '../UserContext';
+
+import INTERVALS from '../../config/intervals'; // constant intervals
 
 const Timer = () => {
   const { userData } = useUserContext();
 
   const [time, setTime] = useState(0);
+  const [initialTime, setInitialTime] = useState(25);
   const [isPaused, setIsPaused] = useState(true);
   const [completedTask, setCompletedTask] = useState(false);
   const [isStopped, setIsStopped] = useState(true);
+  const [intervalProgress, setIntervalProgress] = useState(0);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -35,9 +40,22 @@ const Timer = () => {
 
   const completedCycle = () => {
     setIsPaused(true);
-    setCompletedTask(true);
-    setModalVisible(true)
-    localUpdateHistory(userData.id);
+    setCompletedTask(true);   
+    
+    if (INTERVALS[intervalProgress].type === 'study') {
+      localUpdateHistory(userData.id);
+      setModalVisible(true);      
+    }
+
+    // resets if at end of 8 intervals
+    if (intervalProgress === INTERVALS.length - 1) {
+      setIntervalProgress(0);
+      setInitialTime(INTERVALS[0].length);
+    }
+    else {
+      setInitialTime(INTERVALS[intervalProgress + 1].length);
+      setIntervalProgress(intervalProgress + 1);
+    }
   }
 
   function localUpdateHistory(userId) {
@@ -95,26 +113,32 @@ const Timer = () => {
         ]}
         size={300}
         >
-          <Text style={styles.timerText}>{isStopped ? "25:00" : displayTime(time) }</Text>
+          <Text style={styles.timerText}>{isStopped ? `${initialTime}:00` : displayTime(time) }</Text>
       </CountdownCircleTimer>
 
-      {isStopped &&
-      <TouchableOpacity style={styles.buttonBase} onPress={() => { startTimer() }}>
-        <Text style={styles.font}>Start</Text>
-      </TouchableOpacity>}
+      <ProgressBar intervalProgress={intervalProgress} inProgress={!isPaused} />
       
-      {!isStopped && !completedTask && 
-      <TouchableOpacity style={styles.buttonBase} onPress={() => setIsPaused(!isPaused)}>
-        <Text style={styles.font}>{isPaused ? "Resume" : "Pause"}</Text>
-      </TouchableOpacity>}
+      <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+        {isStopped &&
+          <TouchableOpacity style={styles.buttonBase} onPress={() => { startTimer() }}>
+            <Text style={styles.font}>Start</Text>
+          </TouchableOpacity>
+        }
+        
+        {!isStopped && !completedTask && 
+          <TouchableOpacity style={styles.buttonBase} onPress={() => setIsPaused(!isPaused)}>
+            <Text style={styles.font}>{isPaused ? "Resume" : "Pause"}</Text>
+          </TouchableOpacity>
+        }
 
-      {!isStopped && 
-      <TouchableOpacity style={styles.buttonBase} onPress={() => stopTimer()}>
-        <Text style={styles.font}>Restart</Text>
-      </TouchableOpacity>}
+        {!isStopped && 
+          <TouchableOpacity style={styles.buttonBase} onPress={() => stopTimer()}>
+            <Text style={styles.font}>Restart</Text>
+          </TouchableOpacity>
+        }
+      </View>
 
-      {modalVisible && <UseFishFoodModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
-}
+      {modalVisible && <UseFishFoodModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
 
     </View>
   );
