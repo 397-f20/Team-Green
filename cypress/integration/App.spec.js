@@ -16,6 +16,6 @@ describe ('Test App', () => {
     cy.contains("Pause")
 
     cy.contains("Social").click()
-    cy.contains("Claire").click()
+    cy.contains("(You)").click()
   })
 });

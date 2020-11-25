@@ -59,6 +59,8 @@ const Timer = () => {
       setInitialTime(INTERVALS[intervalProgress + 1].length);
       setIntervalProgress(intervalProgress + 1);
     }
+
+    stopTimer();
   }
 
   function localUpdateHistory(userId) {
@@ -109,10 +111,14 @@ const Timer = () => {
         key={isStopped || time=== 0}
         isPlaying={!isPaused}
         duration={timerDuration}
-        colors={[
-        ['#004777', 0.33],
-        ['#9966FF', 0.33],
-        ['#0066FF', 0.33],
+        colors={ INTERVALS[intervalProgress].type === 'study' ? [
+          ['#004777', 0.33],
+          ['#9966FF', 0.33],
+          ['#0066FF', 0.33],
+        ] : [
+          ['#ff6600', 0.33],
+          ["#ff781f", 0.33],
+          ['#ff8b3d', 0.33]
         ]}
         size={300}
         >
@@ -134,7 +140,7 @@ const Timer = () => {
           </TouchableOpacity>
         }
 
-        {!isStopped && 
+        {!isStopped && !completedTask &&
           <TouchableOpacity style={styles.buttonBase} onPress={() => stopTimer()}>
             <Text style={styles.font}>Restart</Text>
           </TouchableOpacity>
