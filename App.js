@@ -43,10 +43,12 @@ const MainNavigator = () => {
 }
 
 const SocialNavigator = () => {
-  <SocialStack.Navigator initialRouteName='SocialTab' headerMode="none">
-    <SocialStack.Screen name='SocialTab' component={Social} />
-    <SocialStack.Screen name="FriendMessages" component={FriendMessages} />
-  </SocialStack.Navigator>
+  return (
+    <SocialStack.Navigator initialRouteName='SocialTab' headerMode="none">
+      <SocialStack.Screen name='SocialTab' component={Social} />
+      <SocialStack.Screen name="FriendMessages" component={FriendMessages} />
+    </SocialStack.Navigator>
+  );
 }
 
 const Home = () => {

@@ -1,24 +1,29 @@
 // package dependencies
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import { firebase } from '../../config/firebase'
 import 'firebase/auth';
 
 // components
 import Background from '../FishTank/Background.js';
 import SendFishFood from './SendFishFood.js';
+import SendMessage from './SendMessage';
 import Logout from '../Logout/Logout';
 import NewFriendModal from './NewFriendModal';
 import AddFriendButton from './AddFriendButton';
+import MessagesButton from './MessagesButton';
+import MessageModal from './MessageModal';
 import Dropdown from './Dropdown.js';
 
 import { useUserContext } from '../UserContext';
 
-const Social = () => {
+
+const Social = ({navigation}) => {
 
   const { userData } = useUserContext();
   const [displayedUser, setDisplayedUser] = useState(userData);
   const [modalVisible, setModalVisible] = useState(false);
+  const [messageModalVisible, setMessageModalVisible] = useState(false);
 
   // user = {id}
   const changeUser = (uid) => {
@@ -50,6 +55,16 @@ const Social = () => {
     return;
   }, [displayedUser, userData])
 
+  function sendMessageCallback () {
+    if (displayedUser.id === userData.id) {
+      alert("you can't send messages to yourself!")
+      return;
+    }
+
+    setMessageModalVisible(true);
+    return;
+  }
+
   return (
     <View style={styles.container}>      
       <Background fishObjects={displayedUser.fishObjects} />
@@ -57,13 +72,16 @@ const Social = () => {
       <Dropdown friendsList={userData.friends} loggedIn={userData.id} changeUser={changeUser} currentlySelected={displayedUser} />
       
       <AddFriendButton addFriend={showAddFriend} />
+      <MessagesButton navigation={navigation} />
+
       <Logout style={styles.logout}/>
 
-      {modalVisible && <NewFriendModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
-}
-
+      {modalVisible && <NewFriendModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
 
       <SendFishFood callback={sendFishFoodCallback} />
+      <SendMessage callback={sendMessageCallback} />
+      {messageModalVisible && <MessageModal style={styles.modal} modalVisible={messageModalVisible} setModalVisible={setMessageModalVisible} displayedUser={displayedUser}/>}
+
     </View>
   );
 }
