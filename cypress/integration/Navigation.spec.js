@@ -11,4 +11,17 @@ describe('Check tab navigator', () => {
     // return to initial timer tab
     cy.contains('Timer').click();
   }) 
+
+  it ('can start the timer', () => {
+    cy.visit('/')
+
+    // start the timer
+    cy.contains('Start').click();
+    
+    // a pause button should apper that they can click on
+    cy.contains('Pause').click();
+
+    // a resume button should appear
+    cy.contains('Resume').click();
+  }) 
 })
