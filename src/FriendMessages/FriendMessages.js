@@ -3,13 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import BackButton from "./Back";
 import { useUserContext } from '../UserContext';
 import Message from "./Message";
-
-
 const FriendMessages = ({ route, navigation }) => {
   const { userData } = useUserContext();  
   console.log(userData.messages)
-
-
   const ReceivedMessages = () =>{
     return (
       <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-start', marginBottom: 20}}>
@@ -21,7 +17,6 @@ const FriendMessages = ({ route, navigation }) => {
       </View>
     )
   }
-
   const SentMessages = () =>{
     return (
       <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-start'}}>
@@ -33,7 +28,6 @@ const FriendMessages = ({ route, navigation }) => {
       </View>
     )
   }
-
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <BackButton navigation={navigation}/>
@@ -44,7 +38,6 @@ const FriendMessages = ({ route, navigation }) => {
     </View>
   )
 }
-
 const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: 24,
@@ -52,5 +45,4 @@ const styles = StyleSheet.create({
     marginBottom: 5
   }
 })
-
 export default FriendMessages;

@@ -16,11 +16,11 @@ const MessageModal = ({setModalVisible, displayedUser}) => {
 
   function getTimestamp(){
     const now = new Date(Date.now());
-    const year = now.getUTCFullYear();
-    const month = now.getUTCMonth();
-    const day = now.getUTCDate() + 1;
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
     const hour = now.getHours();
-    const mins = now.getUTCMinutes();
+    const mins = now.getMinutes();
     const today = `${month}/${day} ${hour}:${mins}`;
     return today
   }
@@ -39,7 +39,7 @@ const MessageModal = ({setModalVisible, displayedUser}) => {
         message: messageInput, 
         timestamp: getTimestamp()
       })
-      alert('Message sent!');
+      closeModal();
   }
 
   return (
@@ -57,10 +57,6 @@ const MessageModal = ({setModalVisible, displayedUser}) => {
                     <Text style={styles.text}>Send</Text>
                 </View>                
             </TouchableOpacity>
-          <TouchableHighlight
-            onPress={closeModal}>
-            <Text style={{marginTop: 20}}>Close</Text>
-          </TouchableHighlight>
     </View>
   )
 }
