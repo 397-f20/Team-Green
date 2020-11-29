@@ -4,7 +4,6 @@ import { Platform, StyleSheet, Text, View , KeyboardAvoidingView} from 'react-na
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-const Tab = createBottomTabNavigator();
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons';
 import {firebase} from './config/firebase';
 import { ContextProvider } from './src/UserContext';
@@ -16,7 +15,11 @@ import Timer from './src/Timer/Timer.js';
 import Login from './src/Login/Login';
 import Friends from './src/Friends/Friends';
 
+// import FriendMessages from './src/FriendMessages/FriendMessages';
+
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const SocialStack = createStackNavigator();
 
 const App = () => {  
   const [context, setContext] = useState({userData: null, userUID: null});
@@ -39,6 +42,15 @@ const MainNavigator = () => {
     </NavigationContainer>
   );
 }
+
+// const SocialNavigator = () => {
+//   return (
+//     <SocialStack.Navigator initialRouteName='SocialTab' headerMode="none">
+//       <SocialStack.Screen name='SocialTab' component={Social} />
+//       <SocialStack.Screen name="FriendMessages" component={FriendMessages} />
+//     </SocialStack.Navigator>
+//   );
+// }
 
 const Home = () => {
   return (   

@@ -5,7 +5,6 @@ import {firebase} from '../../config/firebase'
 
 import Background from '../FishTank/Background.js';
 import UseFishFoodModal from './UseFishFoodModal.js';
-import Logout from '../Logout/Logout';
 import ProgressBar from './ProgressBar';
 
 import { useUserContext } from '../UserContext';
@@ -106,7 +105,6 @@ const Timer = () => {
   return (
     <View style={styles.timer}>
       <Background fishObjects={userData.fishObjects} /> 
-      <Logout/>
       <CountdownCircleTimer
         key={isStopped || time=== 0}
         isPlaying={!isPaused}
