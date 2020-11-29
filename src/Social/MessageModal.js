@@ -14,19 +14,30 @@ const MessageModal = ({setModalVisible, displayedUser}) => {
     setModalVisible(false);
   }
 
+  function getTimestamp(){
+    const now = new Date(Date.now());
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth();
+    const day = now.getUTCDate() + 1;
+    const hour = now.getHours();
+    const mins = now.getUTCMinutes();
+    const today = `${month}/${day} ${hour}:${mins}`;
+    return today
+  }
+
   function sendMessage () {
       //update self's sent messages
       firebase.database().ref('users').child(userData.id).child('messages').child('sent').push({
         to: displayedUser.name,
         message: messageInput, 
-        timestamp: 0
+        timestamp: getTimestamp()
       })
 
       //update recipient's received messages; 
       firebase.database().ref('users').child(displayedUser.id).child('messages').child('received').push({
         sender: userData.name,
         message: messageInput, 
-        timestamp: 0
+        timestamp: getTimestamp()
       })
       alert('Message sent!');
   }
