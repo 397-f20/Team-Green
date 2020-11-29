@@ -7,7 +7,7 @@ const Message = ({msg, type}) => {
         <View>
           <View style={styles.leftBar} />
           <View style={styles.metaData}>
-            <Text style={{marginRight: 20, fontSize: 12, fontWeight: '700', color: 'gray'}}>{type === 'From' ? msg.sender : msg.to}</Text>
+            <Text style={{marginRight: 20, fontSize: 12, fontWeight: '700', color: 'gray'}}>{msg.from}</Text>
             <Text style={{fontWeight: '600', fontSize: 12, color: 'rgb(0, 164, 228)'}}>{msg.timestamp}</Text>
           </View>
           <Text style={styles.text}>{msg.message}</Text>

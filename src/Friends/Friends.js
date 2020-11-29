@@ -144,8 +144,7 @@ const SingleContact = ({ data }) => {
   )
 }
 
-const TextInputSend = ({onSend, placeholder, buttonText}) => {
-  const [val, setVal] = useState('');
+const TextInputSend = ({onSend, placeholder, buttonText , val, setVal}) => {
 
   return (
     <View style={styles.addFriendContainer}>
@@ -173,6 +172,7 @@ const SingleContactButton = ({children, onPress}) => {
 const Messages = ({ data }) => {
 
   const { userData } = useUserContext();
+  const [val, setVal] = useState('');
 
   const getTimestamp = () => {
     const now = new Date(Date.now());
@@ -185,7 +185,7 @@ const Messages = ({ data }) => {
     return today
   }
 
-  const sendMessage = (val) => {
+  const sendMessage = () => {
     if (val === '') return;
     const sendVal = val.trim();
 
@@ -203,6 +203,8 @@ const Messages = ({ data }) => {
       message: sendVal, 
       timestamp: getTimestamp()
     })
+
+    setVal('');
   }
   
   const getMessages = (messages,friend) => {
@@ -219,6 +221,8 @@ const Messages = ({ data }) => {
         placeholder="Type your message..."
         buttonText="Send"
         onSend={sendMessage}
+        val={val}
+        setVal={setVal}
       />
     </View>
 
