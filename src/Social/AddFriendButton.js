@@ -6,17 +6,12 @@
     This design is temporary and can be changed for the screens. 
 */
 
-import React, { useContext, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Animated } from 'react-native';
-import { firebase } from '../../config/firebase'
-import { useNavigation } from '@react-navigation/native';
-import 'firebase/auth';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 
 
 const AddFriendButton = (props) => {
-    const navigation = useNavigation(); // get navigation object
-
     return (
     <TouchableOpacity style={styles.buttonPosition} activeOpacity={1} onPress={props.addFriend}>
         <View style={styles.button}>
