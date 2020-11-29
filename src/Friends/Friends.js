@@ -6,6 +6,7 @@ import { firebase } from '../../config/firebase'
 import { useNavigation } from '@react-navigation/native';
 
 import { useUserContext } from '../UserContext';
+import Message from '../FriendMessages/Message';
 
 // dimensions
 const SCREEN_WIDTH = Dimensions.get('screen').width;
@@ -188,24 +189,32 @@ const Messages = ({ data }) => {
     if (val === '') return;
     const sendVal = val.trim();
 
-    firebase.database().ref('users').child(userData.id).child('messages').child('sent').push({
+    firebase.database().ref('users').child(userData.id).child('messages').push({
       to: data.friendName,
+      from: userData.name,
       message: sendVal, 
       timestamp: getTimestamp()
     })
 
     //update recipient's received messages; 
-    firebase.database().ref('users').child(data.friendUID).child('messages').child('received').push({
-      sender: userData.name,
+    firebase.database().ref('users').child(data.friendUID).child('messages').push({
+      from: userData.name,
+      to: data.friendName,
       message: sendVal, 
       timestamp: getTimestamp()
     })
-    alert('Message sent!');
-    setShowSendMessageInput(false);
   }
   
+  const getMessages = (messages,friend) => {
+    return Object.values(messages).filter( msg => (msg.to === userData.name && msg.from === friend) || (msg.to === friend && msg.from === userData.name))
+  }
+
   return (
     <View style={{width: '100%'}}>
+      {"messages" in userData ? 
+          Object.values(getMessages(userData.messages, data.friendName)).map(msg => <Message msg={msg} type="To"/>) : null 
+
+      } 
       <TextInputSend 
         placeholder="Type your message..."
         buttonText="Send"
@@ -215,29 +224,6 @@ const Messages = ({ data }) => {
 
   )
 }
-
-// const ReceivedMessages = () =>{
-//   return (
-//     <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-start', marginBottom: 20}}>
-//       <Text style={styles.sectionHeader}>Received messages</Text>
-//       {"messages" in userData && "received" in userData.messages && Object.keys(userData.messages.received).length > 0 ? 
-//         Object.values(userData.messages.received).reverse().map( msg => (<Message msg={msg} type="From" key={msg.timestamp} />))  :
-//         <Text>No messages sent!</Text>
-//       }
-//     </View>
-//   )
-// }
-// const SentMessages = () =>{
-//   return (
-//     <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-start'}}>
-//       <Text style={styles.sectionHeader}>Sent messages</Text>
-//       {"messages" in userData && "sent" in userData.messages && Object.keys(userData.messages.sent).length > 0 ? 
-//         Object.values(userData.messages.sent).reverse().map( (msg) => (<Message msg={msg} type="To" key={msg.timestamp} />)) :
-//         <Text>No messages sent!</Text>
-//       }
-//     </View>
-//   )
-// }
 
 const styles = StyleSheet.create({
   container: {
