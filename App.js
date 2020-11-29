@@ -14,8 +14,7 @@ import Profile from './src/Profile/Profile.js';
 import Social from './src/Social/Social.js';
 import Timer from './src/Timer/Timer.js';
 import Login from './src/Login/Login';
-import Logout from './src/Logout/Logout';
-
+import Friends from './src/Friends/Friends';
 
 const Stack = createStackNavigator();
 
@@ -50,7 +49,7 @@ const Home = () => {
         tabBarIcon: ({ focused }) => {
           let iconName;
 
-          if (route.name === 'Social') {
+          if (route.name === 'Fish tank') {
             iconName = focused
               ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
               : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
@@ -62,17 +61,19 @@ const Home = () => {
             iconName = focused
               ? <FontAwesome name="user" size={24} color="black" />
               : <AntDesign name="user" size={24} color="#2a2a72" />
+          } else if (route.name === 'Social') {
+            iconName = focused
+              ? <MaterialCommunityIcons name="account-group" size={24} color="black" />
+              : <MaterialCommunityIcons name="account-group-outline" size={24} color="#2a2a72" />
           }
 
-          // You can return any component that you like here!
           return iconName;
         },
       })}
     >      
-      <Tab.Screen name="Timer" component={Timer}
-      />
-      <Tab.Screen name="Social" component={Social} 
-      />
+      <Tab.Screen name="Timer" component={Timer} />
+      <Tab.Screen name="Fish tank" component={Social} />
+      <Tab.Screen name="Social" component={Friends} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator> 
   );
