@@ -71,6 +71,7 @@ const ContactsList = () => {
 const AddFriend = ({ hide }) => {
 
   const { userData } = useUserContext();
+  const [val, setVal] = useState('');
 
   const submitted = (val) => {
     var usersRef = firebase.database().ref('users');
@@ -90,7 +91,9 @@ const AddFriend = ({ hide }) => {
         if (child.val().email && val == child.val().email) {
           thisUserRef.child('friends')
             .push({friendName: child.val().name, friendUID: child.val().id, friendEmail: child.val().email});
-          alert("Successfully added friend!");
+          usersRef.child(child.val().id).child('friends')
+            .push({friendName: userData.name, friendUID: userData.id, friendEmail: userData.email});
+            alert("Successfully added friend!");
           hide();
         }
       });
@@ -102,6 +105,8 @@ const AddFriend = ({ hide }) => {
       placeholder="Type friend email"
       onSend={submitted}
       buttonText="Submit"
+      val={val}
+      setVal={setVal}
     />
   )
 }

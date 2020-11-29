@@ -1,29 +1,22 @@
 // package dependencies
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet} from 'react-native';
 import { firebase } from '../../config/firebase'
 import 'firebase/auth';
 
 // components
 import Background from '../FishTank/Background.js';
-import SendFishFood from './SendFishFood.js';
-import SendMessage from './SendMessage';
-import NewFriendModal from './NewFriendModal';
-import AddFriendButton from './AddFriendButton';
-import MessagesButton from './MessagesButton';
-import MessageModal from './MessageModal';
 import Dropdown from './Dropdown.js';
 
 import { useUserContext } from '../UserContext';
 
 
-const Social = ({navigation, route}) => {
+const Social = ({route}) => {
 
   const initialShow = route && route.params && route.params.initialShow ? route.params.initialShow : null;
 
   const { userData } = useUserContext();
   const [displayedUser, setDisplayedUser] = useState(userData);
-  const [messageModalVisible, setMessageModalVisible] = useState(false);
 
   // user = {id}
   const changeUser = (uid) => {
@@ -42,10 +35,7 @@ const Social = ({navigation, route}) => {
   return (
     <View style={styles.container}>      
       <Background fishObjects={displayedUser.fishObjects} />
-
       <Dropdown friendsList={userData.friends} loggedIn={userData.id} changeUser={changeUser} currentlySelected={displayedUser} />
-      
-      <MessagesButton navigation={navigation} />
     </View>
   );
 }
