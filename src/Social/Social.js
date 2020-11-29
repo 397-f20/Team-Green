@@ -8,7 +8,6 @@ import 'firebase/auth';
 import Background from '../FishTank/Background.js';
 import SendFishFood from './SendFishFood.js';
 import SendMessage from './SendMessage';
-import Logout from '../Logout/Logout';
 import NewFriendModal from './NewFriendModal';
 import AddFriendButton from './AddFriendButton';
 import MessagesButton from './MessagesButton';
@@ -74,12 +73,10 @@ const Social = ({navigation}) => {
       <AddFriendButton addFriend={showAddFriend} />
       <MessagesButton navigation={navigation} />
 
-      <Logout style={styles.logout}/>
-
       {modalVisible && <NewFriendModal style={styles.modal} modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
 
-      <SendFishFood callback={sendFishFoodCallback} />
-      <SendMessage callback={sendMessageCallback} />
+      {displayedUser.id !== userData.id ? <SendFishFood callback={sendFishFoodCallback} /> : null}
+      {displayedUser.id !== userData.id ? <SendMessage callback={sendMessageCallback}/> : null}
       {messageModalVisible && <MessageModal style={styles.modal} modalVisible={messageModalVisible} setModalVisible={setMessageModalVisible} displayedUser={displayedUser}/>}
 
     </View>

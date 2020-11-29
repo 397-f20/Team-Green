@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   outerContainer: {
     position: 'absolute',
     bottom: 20,
-    right: 20
+    right: 150
   },
   buttonContainer: {
     opacity: 0.7,
