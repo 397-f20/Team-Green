@@ -61,7 +61,7 @@ const Home = () => {
         tabBarIcon: ({ focused }) => {
           let iconName;
 
-          if (route.name === 'Fish tank') {
+          if (route.name === 'Tank') {
             iconName = focused
               ? <MaterialCommunityIcons name="fishbowl" size={24} color="black" />
               : <MaterialCommunityIcons name="fishbowl-outline" size={24} color="#2a2a72" />;
@@ -84,7 +84,7 @@ const Home = () => {
       })}
     >      
       <Tab.Screen name="Timer" component={Timer} />
-      <Tab.Screen name="Fish tank" component={Social} />
+      <Tab.Screen name="Tank" component={Social} />
       <Tab.Screen name="Social" component={Friends} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator> 

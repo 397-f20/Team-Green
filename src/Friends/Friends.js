@@ -32,7 +32,6 @@ const Friends = () => {
         start={[0, .1]}
         end={[.2, .9]}
       />
-      <Text style={styles.pageTitle}>Hi there, {userData.name}</Text>
       <View style={{flexDirection: 'row', padding: 100, width: '100%'}}>
         <ContactsList />
       </View>
@@ -44,23 +43,45 @@ const ContactsList = () => {
   const { userData } = useUserContext();
 
   const [showAddFriend, setShowAddFriend] = useState(false);
+  const [mappedFriends, setMappedFriends] = useState([]);
 
   const toggleAddFriend = () => setShowAddFriend(!showAddFriend);
 
   console.log(userData.friends)
 
+  useEffect(() => {
+    if ('friends' in userData === false) return;
+
+    firebase.database().ref('users').on('value', snapshot => {
+      const sortArray = [];
+
+      Object.values(userData.friends).forEach((friend) => {
+        sortArray.push({
+          friendUid: friend.friendUID,
+          fish: snapshot.val()[friend.friendUID].fish,
+          friendName: friend.friendName,
+          friendEmail: friend.friendEmail
+        })
+      })
+
+      // SORT THE ARRAY HERE
+      setMappedFriends(sortArray.sort((a, b) => {return b.fish - a.fish}))
+    })
+  }, [])
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.contactListTitle}>
-        <Text style={{fontWeight: '600', fontSize: 24, marginRight: 15}} >Friends</Text>
+        <Text style={{fontWeight: '700', fontSize: 32, marginRight: 15}} >Leaderboard</Text>
         <TouchableOpacity onPress={toggleAddFriend} style={{paddingHorizontal: 10, paddingVertical: 5, backgroundColor: '#2a2a72', borderRadius: 8, flexDirection: 'row', alignItems: 'center'}}>
           <AntDesign name="adduser" size={20} color="white" />
           <Text style={{marginRight: 5, color: 'white'}}>Add friend</Text>
         </TouchableOpacity>
       </View>
       {showAddFriend && <AddFriend hide={toggleAddFriend} />}
+      {'friends' in userData && mappedFriends.length === 0 && <Text>Loading...</Text>}
       <View style={styles.mappedContactsList}>
-        {'friends' in userData && Object.values(userData.friends).map((friend) => (
+        {mappedFriends.map((friend) => (
           <SingleContact data={friend} />
         ))}
       </View>
@@ -117,7 +138,6 @@ const SingleContact = ({ data }) => {
   const { userData } = useUserContext();
 
   const [showSendMessageInput, setShowSendMessageInput] = useState(false);
-
   const sendFood = () => {
     firebase.database().ref('users').child(data.friendUID).child('gifts').push({
       sender: userData.name
@@ -127,20 +147,29 @@ const SingleContact = ({ data }) => {
   }
 
   const viewTank = () => {
-    navigation.navigate('Fish tank', {
+    navigation.navigate('Tank', {
       initialShow: data.friendUID
     });
   }
 
-  if (data.friendUID === userData.id) return null;
-
   return (
     <View style={{width: '100%'}}>
       <View style={styles.singleContact}>
-        <Text style={{flex: 1, fontSize: 18, fontWeight: '600'}}>{data.friendName}</Text>
-        <SingleContactButton onPress={viewTank} >View tank</SingleContactButton>
-        <SingleContactButton onPress={() => setShowSendMessageInput(!showSendMessageInput)} >Messages</SingleContactButton>
-        <SingleContactButton onPress={sendFood} >Gift food</SingleContactButton>
+        <Text style={{fontSize: 18, fontWeight: '600', width: 125}}>{data.friendName}</Text>
+
+        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 8, backgroundColor: 'orange', opacity: data.friendName === userData.name ? 1 : 0.7, alignItems: 'center', justifyContent: 'center', marginHorizontal: 3}}>
+          <Text style={{fontWeight: '700', color: 'white'}}>{data.fish} points</Text>
+        </View>
+
+        {data.friendName === userData.name && <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 8, backgroundColor: '#2a2a72', opacity: 0.7, alignItems: 'center', justifyContent: 'center', marginHorizontal: 3}}>
+          <Text style={{fontWeight: '700', color: 'white'}}>YOU</Text>
+        </View>}
+
+        <View style={{flex: 1}} />
+
+        {data.friendName !== userData.name && <SingleContactButton onPress={viewTank} >View tank</SingleContactButton>}
+        {data.friendName !== userData.name && <SingleContactButton onPress={() => setShowSendMessageInput(!showSendMessageInput)} >Messages</SingleContactButton>}
+        {data.friendName !== userData.name && <SingleContactButton onPress={sendFood} >Gift food</SingleContactButton>}
       </View>
       {showSendMessageInput && <Messages
         data={data}
