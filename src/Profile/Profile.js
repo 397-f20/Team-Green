@@ -49,6 +49,7 @@ const Profile = ({navigation}) => {
     .catch(function(err) {
         alert(err.message);
     })
+    window.location.reload(false);
     return;
   }
 
@@ -105,11 +106,12 @@ const styles = StyleSheet.create({
   },
   logout:{
     alignItems: 'center', 
-    alignSelf:'stretch', 
+    alignSelf:'center', 
     marginVertical: 20,
-    backgroundColor: 'rgb(7, 54, 72)',
+    backgroundColor: "#00a4e4",
     justifyContent: 'center',
-    borderRadius: 12
+    borderRadius: 12, 
+    width: "50%"
   }
 });
 

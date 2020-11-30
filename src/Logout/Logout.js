@@ -47,9 +47,9 @@ const Logout = () => {
 const styles = StyleSheet.create({
     button: {
         height: 30,
-        width: 105,
+        width: '50%',
         borderRadius: 12,
-        backgroundColor: 'rgba(0, 164, 228, 0.8)',
+        backgroundColor: '"#00a4e4"',
         justifyContent: 'center',
         alignItems: 'center'               
     },

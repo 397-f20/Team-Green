@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { View, StyleSheet, Text,Dimensions, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Text,Dimensions, TouchableOpacity, TextInput, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons'; 
 import { firebase } from '../../config/firebase'
@@ -46,7 +46,7 @@ const ContactsList = () => {
   const [mappedFriends, setMappedFriends] = useState([]);
 
   const toggleAddFriend = () => setShowAddFriend(!showAddFriend);
-
+  console.log(userData)
   console.log(userData.friends)
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const ContactsList = () => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.contactListTitle}>
-        <Text style={{fontWeight: '700', fontSize: 32, marginRight: 15}} >Leaderboard</Text>
+        <Text style={{fontWeight: '700', fontSize: 32, marginRight: 15, width: 200}} >Leaderboard</Text>
         <TouchableOpacity onPress={toggleAddFriend} style={{paddingHorizontal: 10, paddingVertical: 5, backgroundColor: '#2a2a72', borderRadius: 8, flexDirection: 'row', alignItems: 'center'}}>
           <AntDesign name="adduser" size={20} color="white" />
           <Text style={{marginRight: 5, color: 'white'}}>Add friend</Text>
@@ -82,7 +82,7 @@ const ContactsList = () => {
       {'friends' in userData && mappedFriends.length === 0 && <Text>Loading...</Text>}
       <View style={styles.mappedContactsList}>
         {mappedFriends.map((friend, index) => (
-          <SingleContact data={friend} index={index} />
+          <SingleContact data={friend} index={index} key={index}/>
         ))}
       </View>
     </View>
@@ -163,7 +163,7 @@ const SingleContact = ({ data, index }) => {
   return (
     <View style={{width: '100%'}}>
       <View style={styles.singleContact}>
-        <Text style={{fontSize: 18, fontWeight: '600', width: 125}}>{data.friendName}</Text>
+        <Text style={{fontSize: 18, fontWeight: '600', width: 100}}>{data.friendName}</Text>
 
         <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 8, backgroundColor: getBackgroundColor(), opacity: 1, alignItems: 'center', justifyContent: 'center', marginHorizontal: 3}}>
           <Text style={{fontWeight: '700', color: 'white'}}>{data.fish} points</Text>
@@ -256,7 +256,7 @@ const Messages = ({ data }) => {
   return (
     <View style={{width: '100%'}}>
       {"messages" in userData ? 
-          Object.values(getMessages(userData.messages, data.friendName)).map(msg => <Message msg={msg} type="To"/>) : null 
+          Object.values(getMessages(userData.messages, data.friendName)).map(msg => <Message msg={msg} type="To" key={msg.timestamp}/>) : null 
 
       } 
       <TextInputSend 
