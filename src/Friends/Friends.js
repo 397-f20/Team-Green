@@ -57,7 +57,7 @@ const ContactsList = () => {
 
       Object.values(userData.friends).forEach((friend) => {
         sortArray.push({
-          friendUid: friend.friendUID,
+          friendUID: friend.friendUID,
           fish: snapshot.val()[friend.friendUID].fish,
           friendName: friend.friendName,
           friendEmail: friend.friendEmail
@@ -81,8 +81,8 @@ const ContactsList = () => {
       {showAddFriend && <AddFriend hide={toggleAddFriend} />}
       {'friends' in userData && mappedFriends.length === 0 && <Text>Loading...</Text>}
       <View style={styles.mappedContactsList}>
-        {mappedFriends.map((friend) => (
-          <SingleContact data={friend} />
+        {mappedFriends.map((friend, index) => (
+          <SingleContact data={friend} index={index} />
         ))}
       </View>
     </View>
@@ -133,12 +133,13 @@ const AddFriend = ({ hide }) => {
 }
 
 // data: {friendEmail, friendName, friendUID}
-const SingleContact = ({ data }) => {
+const SingleContact = ({ data, index }) => {
   const navigation = useNavigation();
   const { userData } = useUserContext();
 
   const [showSendMessageInput, setShowSendMessageInput] = useState(false);
   const sendFood = () => {
+    console.log(data);
     firebase.database().ref('users').child(data.friendUID).child('gifts').push({
       sender: userData.name
     })
@@ -152,12 +153,19 @@ const SingleContact = ({ data }) => {
     });
   }
 
+  const getBackgroundColor = () => {
+    if (index === 0) return "#f9a602"
+    else if (index === 1) return "rgb(100, 100, 100)";
+    else if (index === 2) return "#cd7f32"
+    return "#00a4e4";
+  }
+
   return (
     <View style={{width: '100%'}}>
       <View style={styles.singleContact}>
         <Text style={{fontSize: 18, fontWeight: '600', width: 125}}>{data.friendName}</Text>
 
-        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 8, backgroundColor: 'orange', opacity: data.friendName === userData.name ? 1 : 0.7, alignItems: 'center', justifyContent: 'center', marginHorizontal: 3}}>
+        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 8, backgroundColor: getBackgroundColor(), opacity: 1, alignItems: 'center', justifyContent: 'center', marginHorizontal: 3}}>
           <Text style={{fontWeight: '700', color: 'white'}}>{data.fish} points</Text>
         </View>
 
