@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 38
   },
   buttonBase : {
-    borderRadius: 5,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,

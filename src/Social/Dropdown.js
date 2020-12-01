@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   currentSelection: {
     flexDirection: 'row',
     marginTop: 150,
-    width: Dimensions.get('screen').width * 0.5,
+    width: Dimensions.get('screen').width * 0.4,
     height: 30,
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     marginLeft: 50,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingVertical: 10,
     paddingHorizontal: 20, 
-    width: Dimensions.get('screen').width * 0.5
+    width: Dimensions.get('screen').width * 0.4
   },
   singleOption: {
     borderBottomColor: 'rgba(0, 0, 0, 0.2)',
