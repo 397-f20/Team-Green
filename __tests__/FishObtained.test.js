@@ -35,19 +35,19 @@ describe('Fish Obtained', () => {
   })
 
   it('should add fish at end of timer', () => {
-    let fakeFishCount = 10; // mock firebase fish count
-    const incrementFish = () => fakeFishCount++; // mock function for when timer ends
+    let fakeFishCount = {"hello": {idx: 0, size: 1}}; // mock firebase fish count
+    const incrementFish = () => fakeFishCount["goodbye"] = {idx:1, size:2}; // mock function for when timer ends
 
-    const social = shallow.render(<Social/>)
-    const initialBackground = social.props.children[0];
-    expect(initialBackground.props.numFish).toEqual(0);    
+   // const social = render(<Social/>)
+   // const initialBackground = social.props.children[0];
+   // expect(initialBackground.props.fishObjects).toEqual({});    
 
-    const loadedBackground = shallow.render(<Background numFish={fakeFishCount}/>);
-    expect(loadedBackground.props.children[1].props.numFish).toEqual(fakeFishCount);
+    const loadedBackground = shallow.render(<Background fishObjects={fakeFishCount}/>);
+    expect(loadedBackground.props.children[1].props.fishObjects).toEqual(fakeFishCount);
     
     incrementFish();
 
-    const reloadedBackground = shallow.render(<Background numFish={fakeFishCount}/>);
-    expect(reloadedBackground.props.children[1].props.numFish).toEqual(fakeFishCount);       
+    const reloadedBackground = shallow.render(<Background fishObjects={fakeFishCount}/>);
+    expect(reloadedBackground.props.children[1].props.fishObjects).toEqual(fakeFishCount);       
   })
 });
