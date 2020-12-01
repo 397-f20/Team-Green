@@ -4,8 +4,8 @@ import { expect, it, done } from '@jest/globals';
 import ShallowRenderer from 'react-test-renderer/shallow';
 
 import Background from '../src/FishTank/Background';
-import NewFriendModal from '../src/Social/NewFriendModal';
 import Dropdown from '../src/Social/Dropdown';
+import Friends from '../src/Friends/Friends';
 
 const renderer = new ShallowRenderer();
 
@@ -58,14 +58,12 @@ describe("Social Page Testing", () => {
     });
 
 
-    it('add friends modal displays correctly', () => {
+    it('leaderboard page renders', () => {
         async() => {
-            const newFriendModal = render(<NewFriendModal />);
-            const search = newFriendModal.queryByText('Search Friends by Email');
-            const close = newFriendModal.queryByText('Close');
+            const Friends = render(<Friends />);
+            const leaderboard = Friends.queryByText('Leaderboard');
 
-            expect(search).toBeTruthy();
-            expect(close).toBeTruthy();
+            expect(leaderboard).toBeTruthy();
         };
-    })
+    });
 });

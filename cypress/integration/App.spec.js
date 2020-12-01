@@ -18,7 +18,7 @@ describe ('Test App', () => {
     cy.contains("Pause")
   })
 
-  it('when-then: when user click dropdown, see a friend list and navigate to fishtank of friend', () => {
+  it('when-then: when user naviagte to Tank tab, see a friend list and navigate to fishtank of friend', () => {
     cy.visit('/');
     cy.wait(3000);
     cy.contains("Tank").click();
