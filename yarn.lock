@@ -13537,8 +13537,6 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
-<<<<<<< HEAD
-=======
 react-native-animatable@1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.3.tgz#a13a4af8258e3bb14d0a9d839917e9bb9274ec8a"
@@ -13546,7 +13544,6 @@ react-native-animatable@1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
->>>>>>> master
 react-native-chart-kit@^6.6.1:
   version "6.6.1"
   resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.6.1.tgz#cd49bfdad88aaf6e33115f62a8cdf9df53d34563"
