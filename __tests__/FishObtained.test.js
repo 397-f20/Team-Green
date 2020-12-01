@@ -27,7 +27,7 @@ Using Jest mock functions to control passing of time
 
 describe('Fish Obtained', () => {
   it('should render Background', () => {
-      render(<Background numFish={5}/>);    
+      render(<Background numFish={{idx: 0, size: 1}}/>);    
   });
 
   it('should render Social', () => {
