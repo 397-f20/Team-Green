@@ -43,7 +43,7 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-version: 3.x
-      - run: yarn install
+      - run: npm install
       - run: expo build:web
       - run: npm install -g firebase-tools
       - run: firebase deploy --token "${{ secrets.FIREBASE_DEPLOY_TOKEN }}" --non-interactive
