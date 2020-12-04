@@ -23,7 +23,7 @@ Using Jest mock functions to control passing of time
 */
 
 
-describe.skip('Start Timer', () => {   
+describe('Start Timer', () => {   
 
   it('should render', () => {
     const timer = render(<Timer/>);             
