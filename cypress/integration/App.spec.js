@@ -1,4 +1,14 @@
+import { firebase } from '../../config/firebase';
+import 'firebase/auth';
+
+
 describe ('Test App', () => {
+
+  // manually trigger firebase logout to ensure clean startup of app
+  before(() => {
+    firebase.auth().signOut(); 
+  })
+
   it ('launches', () => {
     cy.visit('/');
   });
